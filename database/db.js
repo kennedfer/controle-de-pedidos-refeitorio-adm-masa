@@ -46,6 +46,7 @@ class Database{
     
     async index(){
         return this.orders;
+        
     }
 
     async show(id){

@@ -8,20 +8,21 @@ function Home() {
   const [orders, setOrders] = useState([])
 
   useEffect(() => {
-    async function fetchApiData(){
+    async function fetchApiData() {
       const response = await fetch("/api/order");
       const orders = await response.json();
-    
+
+      console.log(orders)
       setOrders(orders)
     }
 
     fetchApiData();
-  },[])
+  }, [])
 
   return (
     <main className="w-screen h-screen">
       <div>
-        <PeriodNavigator/>
+        <PeriodNavigator />
       </div>
 
       <table rules="all" className="w-full table-auto border">
@@ -34,9 +35,9 @@ function Home() {
           </tr>
         </thead>
         <tbody>
-        {
-          orders.map(order => <Order key={order.id} order={order}/>)
-        }
+          {
+            orders.map(order => <Order key={order.id} order={order} />)
+          }
         </tbody>
       </table>
     </main>

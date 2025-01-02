@@ -9,7 +9,7 @@ export default function Layout({ children }) {
         <title>Next.js 15 App Router Layout</title>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body>
+      <body className='flex'>
           {children}
       </body>
     </html>

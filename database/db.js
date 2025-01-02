@@ -50,10 +50,10 @@ class Database{
     async index(start, end){
         // return this.orders;
         const orders = await Order.find({
-          targetDate:{
-            $gte: new Date(start), 
-            $lt: new Date(end)
-          }
+          // targetDate:{
+          //   $gte: new Date(start), 
+          //   $lt: new Date(end)
+          // }
         });
         return orders;
         

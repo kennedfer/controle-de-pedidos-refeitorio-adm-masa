@@ -3,39 +3,32 @@
 import { useEffect, useState } from "react"
 import { PeriodNavigator } from "../../components/PeriodNavigator"
 import { OrdersTable } from "../../components/OrdersTable"
+import { DashboardSidebar } from "../../components/DashboardSidebar"
+import { PendingPanel } from "../../components/PendingPanel"
+import { Divider } from "antd"
+import { ApprovedPanel } from "../../components/ApprovedPanel"
 
 function Home() {
-  const [orders, setOrders] = useState([])
   const [period, setPeriod] = useState({
     start: new Date(2024, 10, 11),   
     end: new Date(2024, 11, 10) 
   });
 
-  useEffect(() => {
-    async function fetchApiData() {
-      const {start, end} = period;
+  //MEMORIZAR ISSO react.MEMO
+  const panels = {
+    'Pendentes': <PendingPanel/>,
+    'Aprovados': <ApprovedPanel period={period} setPeriod={setPeriod}/>
+  }
 
-      const response = await fetch(`/api/order?start=${start}&end=${end}`);
-      const orders = await response.json();
+  const panelState = useState('Pendentes');
+  const currentPanel = panelState[0]
 
-      console.log(orders)
-      setOrders(orders)
-    }
-
-    fetchApiData();
-  }, [period])
-
-  return (
+  return (<>
+    <DashboardSidebar panelState={panelState}/>
     <main className="w-screen h-screen">
-      <div>
-        <PeriodNavigator period={period} setPeriod={setPeriod}/>
-      </div>
-
-      <div className="p-2">
-        <OrdersTable orders={orders}/>
-      </div>
+       {panels[currentPanel]}
     </main>
-  )
+  </>)
 }
 
 export default Home

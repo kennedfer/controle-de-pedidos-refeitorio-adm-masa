@@ -1,8 +1,12 @@
-import '../../../database/mongoose'
 import { db } from "../../../database/db";
 
 export async function GET(request) {
-    const orders = await db.index();
+    const searchParams = request.nextUrl.searchParams
+
+    const start = searchParams.get('start')
+    const end = searchParams.get('end')
+
+    const orders = await db.index(start, end);
     return Response.json(orders)
 }
 

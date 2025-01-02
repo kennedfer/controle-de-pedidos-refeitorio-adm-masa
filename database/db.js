@@ -1,3 +1,6 @@
+import '../database/mongoose'
+import { Order } from "../models/order";
+
 const ordersTable = {
     apresentacaoMusical: 2706.53,
     cafeLitro: 4.29,
@@ -41,11 +44,18 @@ const fakeData = [
 
 class Database{
     constructor(){
-        this.orders = fakeData;
+        // this.orders = fakeData;
     }
     
-    async index(){
-        return this.orders;
+    async index(start, end){
+        // return this.orders;
+        const orders = await Order.find({
+          targetDate:{
+            $gte: new Date(start), 
+            $lt: new Date(end)
+          }
+        });
+        return orders;
         
     }
 
@@ -63,18 +73,28 @@ class Database{
     }
 
     async store(order){
-        const lastOrder = this.orders[this.orders.length - 1];
+        // const lastOrder = this.orders[this.orders.length - 1];
 
-        const id = lastOrder ? lastOrder.id + 1 : 0;
+        // const id = lastOrder ? lastOrder.id + 1 : 0;
         const price = ordersTable[order.type] * order.quantity;
 
-        this.orders.push({
-            ...order,
-            id,
-            price
-        })
+        // this.orders.push({
+        //     ...order,
+        //     id,
+        //     price
+        // })
 
-        return this.orders[this.orders.length-1]
+        // await Order.deleteMany({})
+
+        const newOrder = new Order({
+          ...order,
+          price
+        });
+
+        await newOrder.save();
+
+        return newOrder;
+        // return this.orders[this.orders.length-1]
     }
 }
 

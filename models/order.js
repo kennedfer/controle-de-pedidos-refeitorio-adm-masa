@@ -25,11 +25,6 @@ const orderSchema = new mongoose.Schema({
     trim: true,
     default: '',
   },
-  id: {
-    type: Number,
-    unique: true,
-    required: true,
-  },
   price: {
     type: Number,
     required: true,
@@ -41,8 +36,12 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
   },
+  targetDate:{
+    type: Date,
+    required: true,
+  }
 }, {
   timestamps: true,
 });
 
-export const Order = mongoose.model('Order', orderSchema);
+export const Order = mongoose.models.Order || mongoose.model('Order', orderSchema);

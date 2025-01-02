@@ -9,7 +9,8 @@ export default function OrderPage() {
     type: "apresentacaoMusical",
     quantity: 1,
     costCenter: "",
-    notes: ""
+    notes: "",
+    targetDate: new Date().toISOString().split('T')[0]
   });
 
   
@@ -97,6 +98,7 @@ export default function OrderPage() {
             onChange={handleChange}
             placeholder="Ex.: Enviar limões para o churrasco"
           />
+          <input name="targetDate" value={formData.targetDate} className="border" type="date" onChange={handleChange}/>
           <button className="border" type="submit">
             Cadastrar Pedido
           </button>

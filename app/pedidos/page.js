@@ -1,15 +1,21 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { Order } from "../../components/Order"
 import { PeriodNavigator } from "../../components/PeriodNavigator"
+import { OrdersTable } from "../../components/OrdersTable"
 
 function Home() {
   const [orders, setOrders] = useState([])
+  const [period, setPeriod] = useState({
+    start: new Date(2024, 10, 11),   
+    end: new Date(2024, 11, 10) 
+  });
 
   useEffect(() => {
     async function fetchApiData() {
-      const response = await fetch("/api/order");
+      const {start, end} = period;
+
+      const response = await fetch(`/api/order?start=${start}&end=${end}`);
       const orders = await response.json();
 
       console.log(orders)
@@ -17,29 +23,15 @@ function Home() {
     }
 
     fetchApiData();
-  }, [])
+  }, [period])
 
   return (
     <main className="w-screen h-screen">
       <div>
-        <PeriodNavigator />
+        <PeriodNavigator period={period} setPeriod={setPeriod}/>
       </div>
 
-      <table rules="all" className="w-full table-auto border">
-        <thead>
-          <tr>
-            <th scope="col">Solicitado Por</th>
-            <th scope="col">Tipo</th>
-            <th scope="col">Quantidade</th>
-            <th scope="col">Valor do Pedido</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            orders.map(order => <Order key={order.id} order={order} />)
-          }
-        </tbody>
-      </table>
+      <OrdersTable orders={orders}/>
     </main>
   )
 }

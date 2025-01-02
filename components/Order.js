@@ -1,8 +1,4 @@
-const statusColors = {
-    'pending':"",
-    'rejected':"bg-[red]",
-    'approved':'bg-[green]'
-}
+import { Button } from "antd";
 
 export function Order({order}){
     const {owner, type, quantity, price} = order;
@@ -19,16 +15,14 @@ export function Order({order}){
         console.log(updatedOrder)
     }
 
-    return <tr className={statusColors[order.status]}>
+    return <tr className="p-5">
         <th scope="row">{owner}</th>
         <td>{type}</td>
         <td>{quantity}</td>
         <td>{price}</td>
-        <td>
-            <button onClick={() => handleClick("rejected")} className="border bg-[red] p-1">REPROVAR</button>
-        </td> 
-        <td>
-            <button onClick={() => handleClick("approved")} className="border bg-[green] p-1">APROVAR</button>
+        <td className="flex p-2 gap-3 w-full justify-center">
+            <Button onClick={() => handleClick("rejected")} danger>REPROVAR</Button>
+            <Button onClick={() => handleClick("approved")}  className="hover:!text-green-300 hover:!border-green-300 text-green-400 border-green-400" >APROVAR</Button>
         </td> 
     </tr>
 }

@@ -31,7 +31,9 @@ function Home() {
         <PeriodNavigator period={period} setPeriod={setPeriod}/>
       </div>
 
-      <OrdersTable orders={orders}/>
+      <div className="p-2">
+        <OrdersTable orders={orders}/>
+      </div>
     </main>
   )
 }

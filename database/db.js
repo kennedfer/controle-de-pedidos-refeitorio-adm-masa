@@ -82,6 +82,7 @@ class Database{
 
         // const id = lastOrder ? lastOrder.id + 1 : 0;
         const price = ordersTable[order.type] * order.quantity;
+        const targetDate = new Date(order.targetDate).toLocaleDateString('pt-BR')
 
         // this.orders.push({
         //     ...order,
@@ -92,7 +93,8 @@ class Database{
         // await Order.deleteMany({})
         const newOrder = new Order({
           ...order,
-          price
+          price,
+          targetDate
         });
 
         await newOrder.save();

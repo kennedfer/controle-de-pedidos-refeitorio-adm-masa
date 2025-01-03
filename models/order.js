@@ -37,7 +37,7 @@ const orderSchema = new mongoose.Schema({
     default: 'pending',
   },
   targetDate:{
-    type: Date,
+    type: String,
     required: true,
   }
 }, {

@@ -7,7 +7,7 @@ export function exportToExcel(orders) {
         "Quantidade (Unidade)": order.quantity,
         "Centro de Custo": order.costCenter,
         "Valor do Pedido": order.price,
-        "Data da Entrega": new Date(order.targetDate).toLocaleDateString('pt-BR'),
+        "Data da Entrega": order.targetDate,
         "Detalhes": order.notes
     }))
 

@@ -3,19 +3,11 @@ import { PeriodNavigator } from "./PeriodNavigator";
 import { ApprovedTable } from "./ApprovedTable";
 import { ExcelButton } from "./ExcelButton";
 
-import * as XLSX from 'xlsx';
+import {exportToExcel} from '../utils/excel'
 
 export function ApprovedPanel({ period, setPeriod }) {
     const [orders, setOrders] = useState([])
 
-    function exportToExcel(){
-        const ws = XLSX.utils.json_to_sheet(orders);
-    
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Dados');
-    
-        XLSX.writeFile(wb, 'dados.xlsx');
-      };
 
     useEffect(() => {
         async function fetchApiData() {
@@ -35,8 +27,8 @@ export function ApprovedPanel({ period, setPeriod }) {
         <div>
             <PeriodNavigator period={period} setPeriod={setPeriod} />
         </div>
-
-        <ExcelButton handler={exportToExcel}/>
+        
+        <ExcelButton handler={()=> exportToExcel(orders)}/>
 
         <div className="p-2">
             <ApprovedTable orders={orders} />

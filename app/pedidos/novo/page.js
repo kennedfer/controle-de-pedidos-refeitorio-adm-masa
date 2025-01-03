@@ -1,14 +1,14 @@
 'use client'
 
-import { Input, Select, InputNumber, Button, DatePicker, Card, Form} from "antd";
+import { Input, Select, InputNumber, Button, DatePicker, Card, Form } from "antd";
 import React, { useState } from "react";
 
 const { TextArea } = Input;
-const {Option} = Select;
+const { Option } = Select;
 
 const defaultFormData = {
   owner: "",
-  type: "apresentacaoMusical",
+  type: "",
   quantity: 1,
   costCenter: "",
   notes: "",
@@ -19,7 +19,7 @@ export default function OrderPage() {
   const [form] = Form.useForm();
   const [formData, setFormData] = useState(defaultFormData);
 
-  
+
   function handleChange(event) {
     const { name, value } = event.target;
     setFormData({
@@ -29,10 +29,10 @@ export default function OrderPage() {
   }
 
   async function handleSubmit(e) {
-    
-    const response = await fetch('/api/order',{
-        method:'POST',
-        body:JSON.stringify(formData)
+
+    const response = await fetch('/api/order', {
+      method: 'POST',
+      body: JSON.stringify(formData)
     })
 
     const data = await response.json();
@@ -45,12 +45,12 @@ export default function OrderPage() {
       <Card className="w-[350px]">
         <h2 className="text-xl text-center font-bold w-full">Novo Pedido</h2>
 
-        <Form 
+        <Form
           className="flex flex-col gap-1"
           form={form}
 
-          layout={'vertical'} 
-          
+          layout={'vertical'}
+
           onFinish={handleSubmit}>
           {/* Nome do Proprietário */}
           <Form.Item label="Solicitado Por" name="owner">
@@ -71,21 +71,22 @@ export default function OrderPage() {
                 onChange={(value) => handleChange({ target: { name: 'type', value } })}
                 style={{ width: "70%" }}
               >
-                <Option value="apresentacaoMusical">APRESENTAÇÃO MUSICAL</Option>
-                <Option value="cafeLitro">CAFÉ LITRO</Option>
-                <Option value="cerveja">CERVEJA</Option>
-                <Option value="churrasco">CHURRASCO</Option>
-                <Option value="coffI">COFF I</Option>
-                <Option value="coffII">COFF II</Option>
-                <Option value="coffIII">COFF III</Option>
-                <Option value="desjejum">DESJEJUM</Option>
-                <Option value="desjejumAcampamento">DESJEJUM ACAMPAMENTO</Option>
-                <Option value="evento">EVENTO</Option>
-                <Option value="lancheEspecial">LANCHE ESPECIAL</Option>
-                <Option value="lancheTurno">LANCHE TURNO</Option>
-                <Option value="picole">PICOLE</Option>
-                <Option value="jantar">JANTAR</Option>
-                <Option value="almoco">ALMOÇO</Option>
+                <Option value="APRESENTACAO MUSICAL">APRESENTAÇÃO MUSICAL</Option>
+                <Option value="CAFE LITRO">CAFÉ LITRO</Option>
+                <Option value="CERVEJA">CERVEJA</Option>
+                <Option value="CHURRASCO">CHURRASCO</Option>
+                <Option value="COFF I">COFF I</Option>
+                <Option value="COFF II">COFF II</Option>
+                <Option value="COFF III">COFF III</Option>
+                <Option value="DESJEJUM">DESJEJUM</Option>
+                <Option value="DESJEJUM ACAMPAMENTO">DESJEJUM ACAMPAMENTO</Option>
+                <Option value="EVENTO">EVENTO</Option>
+                <Option value="LANCHE ESPECIAL">LANCHE ESPECIAL</Option>
+                <Option value="LANCHE TURNO">LANCHE TURNO</Option>
+                <Option value="PICOLE">PICOLE</Option>
+                <Option value="ALMOCO">ALMOÇO</Option>
+                <Option value="JANTAR">JANTAR</Option>
+
               </Select>
 
               <InputNumber
@@ -100,14 +101,44 @@ export default function OrderPage() {
             </div>
           </Form.Item>
 
-          {/* Centro de Custo */}
-          <Form.Item label="Centro de Custo" name="costCenter">
-            <Input
+          <Form.Item label="Centro de Custo" name="type">
+            <Select
               name="costCenter"
               value={formData.costCenter}
-              onChange={handleChange}
-              placeholder="Ex.: RH, BARRAGEM"
-            />
+              onChange={(value) => handleChange({ target: { name: 'costCenter', value } })}
+            >
+              <Option value="102062-BOMBEAMENTO">102062 - BOMBEAMENTO</Option>
+              <Option value="102101 - GEOLOGIA OPERACIONAL">102101 - GEOLOGIA OPERACIONAL</Option>
+              <Option value="102102 - PLANEJAMENTO E TOPOGRAFIA">102102 - PLANEJAMENTO E TOPOGRAFIA</Option>
+              <Option value="102103 - GEOTECNICA E HIDROLOGIA">102103 - GEOTECNICA E HIDROLOGIA</Option>
+              <Option value="102901 - ADMINISTRACAO DE MINA CEU ABERTO">102901 - ADMINISTRACAO DE MINA CEU ABERTO</Option>
+              <Option value="201011 - BRITAGEM">201011 - BRITAGEM</Option>
+              <Option value="202011 - MOAGEM">202011 - MOAGEM</Option>
+              <Option value="209011 - LIXIVIACAO/CIANETACAO">209011 - LIXIVIACAO/CIANETACAO</Option>
+              <Option value="210012 - DESSORÇÃO(ELUIÇAO)ELETROLISE">210012 - DESSORÇÃO(ELUIÇAO)ELETROLISE</Option>
+              <Option value="211012 - FUNDICAO">211012 - FUNDICAO</Option>
+              <Option value="212025 - DETOX">212025 - DETOX</Option>
+              <Option value="213011 - MANUTECAO ELETRICA">213011 - MANUTECAO ELETRICA</Option>
+              <Option value="213012 - MANUTENCAO MECANICA">213012 - MANUTENCAO MECANICA</Option>
+              <Option value="214011 - BARRAGEM DE REJEITO">214011 - BARRAGEM DE REJEITO</Option>
+              <Option value="290011 - ADMINISTRAÇÃO DA PLANTA">290011 - ADMINISTRAÇÃO DA PLANTA</Option>
+              <Option value="401011 - SEGURANCA">401011 - SEGURANCA</Option>
+              <Option value="401021 - SAUDE">401021 - SAUDE</Option>
+              <Option value="401031 - MEIO AMBIENTE">401031 - MEIO AMBIENTE</Option>
+              <Option value="401061 - GESTAO FUNDIARIA">401061 - GESTAO FUNDIARIA</Option>
+              <Option value="403011 - CONTROLADORIA">403011 - CONTROLADORIA</Option>
+              <Option value="405011 - SEGURANCA PATRIMONIAL">405011 - SEGURANCA PATRIMONIAL</Option>
+              <Option value="405021 - INFORMACAO E TECNOLOGIA">405021 - INFORMACAO E TECNOLOGIA</Option>
+              <Option value="405031 - PURCHASING, SUPPLY AND WAREHOU">405031 - PURCHASING, SUPPLY AND WAREHOU</Option>
+              <Option value="405041 - RECURSOS HUMANOS">405041 - RECURSOS HUMANOS</Option>
+              <Option value="405071 - ADMINISTRACAO GERENCIAMENTO">405071 - ADMINISTRACAO GERENCIAMENTO</Option>
+              <Option value="405072 - ALMOXARIFADO">405072 - ALMOXARIFADO</Option>
+              <Option value="405074 - PCP">405074 - PCP</Option>
+              <Option value="409011 - GERENCIA GERAL">409011 - GERENCIA GERAL</Option>
+              <Option value="601041 - COMUNIDADE">601041 - COMUNIDADE</Option>
+              <Option value="602041 - EXPLORACAO GERENCIAMENTO MINA">602041 - EXPLORACAO GERENCIAMENTO MINA</Option>
+
+            </Select>
           </Form.Item>
 
           {/* Notas */}
@@ -129,7 +160,7 @@ export default function OrderPage() {
               onChange={(date, dateString) => handleChange({ target: { name: 'targetDate', value: dateString } })}
             />
           </Form.Item>
-          
+
           <Form.Item>
             <Button className="w-full" type="primary" htmlType="submit" style={{ marginTop: 10 }}>
               Cadastrar Pedido

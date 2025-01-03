@@ -2,22 +2,23 @@ import '../database/mongoose'
 import { Order } from "../models/order";
 
 const ordersTable = {
-    apresentacaoMusical: 2706.53,
-    cafeLitro: 4.29,
-    cerveja: 22.37,
-    churrasco: 67.76,
-    coffI: 13.27,
-    coffII: 16.47,
-    coffIII: 17.95,
-    desjejum: 20.11,
-    desjejumAcampamento: 29.77,
-    evento: 83.23,
-    lancheEspecial: 37.96,
-    lancheTurno: 12.02,
-    picole: 4.05,
-    jantar: 21.45,
-    almoco: 21.45
-  };
+  "APRESENTACAO MUSICAL": 2706.53,
+  "CAFE LITRO": 4.29,
+  "CERVEJA": 22.37,
+  "CHURRASCO": 67.76,
+  "COFF I": 13.27,
+  "COFF II": 16.47,
+  "COFF III": 17.95,
+  "DESJEJUM": 20.11,
+  "DESJEJUM ACAMPAMENTO": 29.77,
+  "EVENTO": 83.23,
+  "LANCHE ESPECIAL": 37.96,
+  "LANCHE TURNO": 12.02,
+  "PICOLE": 4.05,
+  "JANTAR": 21.45,
+  "ALMOCO": 21.45
+};
+
 
 const fakeData = [
     {

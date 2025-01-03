@@ -1,6 +1,6 @@
-import {Order} from '../components/Order'
+import {PendingOrder} from './PendingOrder'
 
-export function OrdersTable({orders}){
+export function PendingTable({orders, refresh}){
     return (
     <table rules="all" className="w-full table-fixed">
         <thead>
@@ -14,7 +14,7 @@ export function OrdersTable({orders}){
         </thead>
         <tbody>
         {
-            orders.map(order => <Order key={order._id} order={order} />)
+            orders.map(order => <PendingOrder refresh={refresh} key={order._id} order={order} />)
         }
         </tbody>
     </table>)

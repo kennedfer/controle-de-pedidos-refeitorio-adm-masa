@@ -6,16 +6,18 @@ import React, { useState } from "react";
 const { TextArea } = Input;
 const {Option} = Select;
 
+const defaultFormData = {
+  owner: "",
+  type: "apresentacaoMusical",
+  quantity: 1,
+  costCenter: "",
+  notes: "",
+  targetDate: new Date().toISOString().split('T')[0]
+}
+
 export default function OrderPage() {
-    
-  const [formData, setFormData] = useState({
-    owner: "",
-    type: "apresentacaoMusical",
-    quantity: 1,
-    costCenter: "",
-    notes: "",
-    targetDate: new Date().toISOString().split('T')[0]
-  });
+  const [form] = Form.useForm();
+  const [formData, setFormData] = useState(defaultFormData);
 
   
   function handleChange(event) {
@@ -27,29 +29,29 @@ export default function OrderPage() {
   }
 
   async function handleSubmit(e) {
-    e.preventDefault();
     
-    console.log(formData);
     const response = await fetch('/api/order',{
         method:'POST',
         body:JSON.stringify(formData)
     })
 
     const data = await response.json();
-    console.log(data)
+    setFormData(defaultFormData);
+    form.resetFields();
   }
 
   return (
-    <main className="grid place-items-center h-screen">
+    <main className="grid place-items-center h-screen w-screen">
       <Card className="w-[350px]">
         <h2 className="text-xl text-center font-bold w-full">Novo Pedido</h2>
 
         <Form 
           className="flex flex-col gap-1"
+          form={form}
 
           layout={'vertical'} 
           
-          onSubmit={handleSubmit}>
+          onFinish={handleSubmit}>
           {/* Nome do Proprietário */}
           <Form.Item label="Solicitado Por" name="owner">
             <Input

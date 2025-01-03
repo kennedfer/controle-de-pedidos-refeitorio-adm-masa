@@ -20,9 +20,7 @@ export function PeriodNavigator({period, setPeriod}) {
     const newEnd = new Date(newStart);
     newEnd.setMonth(newStart.getMonth() + 1); // Vai para o mês seguinte
     newEnd.setDate(10); // Dia 10 do próximo mês
-  
-    console.log(period);
-  
+
     setPeriod({
       start: newStart,
       end: newEnd
@@ -35,7 +33,7 @@ export function PeriodNavigator({period, setPeriod}) {
   };
 
   return (
-    <div className='w-full flex p-2 gap-2'>
+    <div className='w-full flex p-2 pb-0 gap-2'>
       <Button onClick={() => changePeriod('previous')}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
           <path fillRule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clipRule="evenodd" />

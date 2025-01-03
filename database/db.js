@@ -47,29 +47,33 @@ class Database{
         // this.orders = fakeData;
     }
     
-    async index(start, end){
-        // return this.orders;
+    async index(start, end, status){
+        console.log(start, end, status)
+
         const orders = await Order.find({
-          // targetDate:{
-          //   $gte: new Date(start), 
-          //   $lt: new Date(end)
-          // }
+          createdAt:{
+            $gte: new Date(start), 
+            $lt: new Date(end)
+          },
+          status:{
+             "$eq":status
+          }
         });
+
         return orders;
-        
     }
 
     async show(id){
-        return this.orders.filter(order => order.id == id)[0] || []
+        return await Order.findById(id);
     }
 
     async update(id, status){
         const order = await this.show(id);
-        const orderIndex = this.orders.indexOf(order)
 
-        this.orders[orderIndex].status = status
+        order.status = status
+        await order.save();
 
-        return this.orders[orderIndex];
+        return order;
     }
 
     async store(order){
@@ -85,7 +89,6 @@ class Database{
         // })
 
         // await Order.deleteMany({})
-
         const newOrder = new Order({
           ...order,
           price

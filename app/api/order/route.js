@@ -3,10 +3,13 @@ import { db } from "../../../database/db";
 export async function GET(request) {
     const searchParams = request.nextUrl.searchParams
 
-    const start = searchParams.get('start')
-    const end = searchParams.get('end')
+    const start = searchParams.get('start') || 0;
+    const end = searchParams.get('end') || Date.now();
+    const status = searchParams.get('status');
 
-    const orders = await db.index(start, end);
+
+    
+    const orders = await db.index(start, end, status);
     return Response.json(orders)
 }
 

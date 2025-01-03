@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { PeriodNavigator } from "../../components/PeriodNavigator"
-import { OrdersTable } from "../../components/OrdersTable"
+import { OrdersTable } from "../../components/PendingTable"
 import { DashboardSidebar } from "../../components/DashboardSidebar"
 import { PendingPanel } from "../../components/PendingPanel"
 import { Divider } from "antd"

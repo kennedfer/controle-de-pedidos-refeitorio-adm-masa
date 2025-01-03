@@ -1,13 +1,13 @@
 import { useState, useEffect} from "react";
-import { OrdersTable } from "./OrdersTable";
-import { PeriodNavigator } from "./PeriodNavigator";
+import { PendingTable } from "./PendingTable";
 
 export function PendingPanel(){
     const [orders, setOrders] = useState([])
+    const [refresh, setRefresh] = useState(0);
 
     useEffect(() => {
         async function fetchApiData() {
-          const response = await fetch(`/api/order`);
+          const response = await fetch(`/api/order?status=pending`);
           const orders = await response.json();
     
           console.log(orders)
@@ -15,15 +15,11 @@ export function PendingPanel(){
         }
     
         fetchApiData();
-      }, [])
+      }, [refresh])
 
     return <>
-        <div>
-            {/* <PeriodNavigator period={period} setPeriod={setPeriod}/> */}
-        </div>
-
-        <div className="p-2">
-            <OrdersTable orders={orders}/>
+        <div onClick={()=> setRefresh(refresh+1)} className="p-2 pointer-events-none">
+            <PendingTable refresh={setRefresh} orders={orders}/>
         </div>
     </>
 }

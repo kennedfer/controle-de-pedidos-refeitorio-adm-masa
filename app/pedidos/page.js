@@ -9,12 +9,15 @@ import { Divider } from "antd"
 import { ApprovedPanel } from "../../components/ApprovedPanel"
 
 import {motion} from 'framer-motion'
+import { useRouter } from "next/navigation"
 
 function Home() {
   const [period, setPeriod] = useState({
     start: new Date(2024, 10, 11),   
     end: new Date(2024, 11, 10) 
   });
+
+  const router = useRouter();
 
   //MEMORIZAR ISSO react.MEMO
   const panels = {
@@ -26,11 +29,14 @@ function Home() {
   const currentPanel = panelState[0]
 
   function promptLogin(){
-    const acessToken = sessionStorage.getItem("cadastro-alibras-token");
+    const acessToken = sessionStorage.getItem("cadastro-alibras-tokens");
 
     if (!acessToken) {
       const password = prompt('Senha de acesso?')
-      console.log(acessToken);
+      
+      if(password == null){
+        return panelState[1]("Aprovados")
+      }
 
       if(password == "admin2025"){
         return sessionStorage.setItem("cadastro-alibras-token", "ok")

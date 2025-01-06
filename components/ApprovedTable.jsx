@@ -2,9 +2,9 @@ import {ApprovedOrder} from './ApprovedOrder'
 
 export function ApprovedTable({orders}){
     return (
-    <table rules="all" className="w-full table-fixed">
-        <thead>
-        <tr className='bg-gray-100'>
+        <table rules="all" className="w-full table-fixed text-xs">
+        <thead className='border-b rounded-lg bg-[#fafafa] rounded-xl'>
+        <tr>
             <th scope="col">Solicitado Por</th>
             <th scope="col">Tipo</th>
             <th scope="col">Quantidade</th>
@@ -14,7 +14,7 @@ export function ApprovedTable({orders}){
         </thead>
         <tbody>
         {
-            orders.map(order => <ApprovedOrder key={order._id} order={order} />)
+            orders.map((order,i) => <ApprovedOrder key={order._id} order={order} i={i}/>)
         }
         </tbody>
     </table>)

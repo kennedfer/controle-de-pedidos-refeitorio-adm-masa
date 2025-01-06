@@ -4,6 +4,7 @@ import { ApprovedTable } from "./ApprovedTable";
 import { ExcelButton } from "./ExcelButton";
 
 import {exportToExcel} from '../utils/excel'
+import { Empty } from "antd";
 
 export function ApprovedPanel({ period, setPeriod }) {
     const [orders, setOrders] = useState([])
@@ -33,5 +34,8 @@ export function ApprovedPanel({ period, setPeriod }) {
         <div className="p-2">
             <ApprovedTable orders={orders} />
         </div>
+            {orders.length == 0 && <Empty description={
+                <span>Sem pedidos nesse periodo</span>
+            } image={Empty.PRESENTED_IMAGE_SIMPLE}/>}
     </>
 }

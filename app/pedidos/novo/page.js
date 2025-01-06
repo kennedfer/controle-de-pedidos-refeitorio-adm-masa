@@ -11,8 +11,9 @@ const defaultFormData = {
   type: "",
   quantity: 1,
   costCenter: "",
-  notes: "",
-  targetDate: new Date().toISOString().split('T')[0]
+  comments: "",
+  targetDate: new Date().toISOString().split('T')[0],
+  targetPlace: ""
 }
 
 export default function OrderPage() {
@@ -41,12 +42,12 @@ export default function OrderPage() {
   }
 
   return (
-    <main className="grid place-items-center h-screen w-screen">
-      <Card className="w-[350px]">
+    <main className="grid place-items-center h-screen w-screen bg-[#fafafa]">
+      <Card className="w-[350px] shadow-md">
         <h2 className="text-xl text-center font-bold w-full">Novo Pedido</h2>
 
         <Form
-          className="flex flex-col gap-1"
+          className="flex flex-col"
           form={form}
 
           layout={'vertical'}
@@ -56,6 +57,7 @@ export default function OrderPage() {
           <Form.Item label="Solicitado Por" name="owner">
             <Input
               name="owner"
+              size="small"
               value={formData.owner}
               onChange={handleChange}
               placeholder="Ex.: Kenned Ferreira"
@@ -67,6 +69,7 @@ export default function OrderPage() {
             <div className="flex gap-1">
               <Select
                 name="type"
+                size="small"
                 value={formData.type}
                 onChange={(value) => handleChange({ target: { name: 'type', value } })}
                 style={{ width: "70%" }}
@@ -91,6 +94,7 @@ export default function OrderPage() {
 
               <InputNumber
                 name="quantity"
+                size="small"
                 value={formData.quantity}
                 onChange={(value) => handleChange({ target: { name: 'quantity', value } })}
                 min={1}
@@ -104,6 +108,7 @@ export default function OrderPage() {
           <Form.Item label="Centro de Custo" name="type">
             <Select
               name="costCenter"
+              size="small"
               value={formData.costCenter}
               onChange={(value) => handleChange({ target: { name: 'costCenter', value } })}
             >
@@ -141,28 +146,38 @@ export default function OrderPage() {
             </Select>
           </Form.Item>
 
-          {/* Notas */}
-          <Form.Item label="Notas" name="notes">
+          <Form.Item label="Comentários" name="comments">
             <TextArea
-              name="notes"
-              value={formData.notes}
+              name="comments"
+              size="small"
+              value={formData.comments}
               onChange={handleChange}
               placeholder="Ex.: Enviar limões para o churrasco"
               rows={4}
             />
           </Form.Item>
 
-          {/* Data Alvo */}
-          <Form.Item label="Data Alvo" name="targetDate">
+          <Form.Item label="Data da Entrega" name="targetDate">
             <DatePicker
               className="w-full"
+              size="small"
               name="targetDate"
               onChange={(date, dateString) => handleChange({ target: { name: 'targetDate', value: dateString } })}
             />
           </Form.Item>
 
+          <Form.Item label="Local da Entrega" name="targetPlace">
+            <Input
+              name="targetPlace"
+              value={formData.targetPlace}
+              size="small"
+              onChange={handleChange}
+              placeholder="Ex.: Sala de Reunião TATAJUBA"
+            />
+          </Form.Item>
+
           <Form.Item>
-            <Button className="w-full" type="primary" htmlType="submit" style={{ marginTop: 10 }}>
+            <Button size="small" className="w-full" type="primary" htmlType="submit" style={{ marginTop: 10 }}>
               Cadastrar Pedido
             </Button>
           </Form.Item>

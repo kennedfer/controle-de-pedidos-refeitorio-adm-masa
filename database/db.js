@@ -1,22 +1,25 @@
 import '../database/mongoose'
 import { Order } from "../models/order";
 
+
+// FEITO EM CENTAVOS PARA CORRIGIR BUGS
+// DE IMPRECISAO COM FLOATS
 const ordersTable = {
-  "APRESENTACAO MUSICAL": 2706.53,
-  "CAFE LITRO": 4.29,
-  "CERVEJA": 22.37,
-  "CHURRASCO": 67.76,
-  "COFF I": 13.27,
-  "COFF II": 16.47,
-  "COFF III": 17.95,
-  "DESJEJUM": 20.11,
-  "DESJEJUM ACAMPAMENTO": 29.77,
-  "EVENTO": 83.23,
-  "LANCHE ESPECIAL": 37.96,
-  "LANCHE TURNO": 12.02,
-  "PICOLE": 4.05,
-  "JANTAR": 21.45,
-  "ALMOCO": 21.45
+  "APRESENTACAO MUSICAL": 270653,
+  "CAFE LITRO": 429,
+  "CERVEJA": 2237,
+  "CHURRASCO": 6776,
+  "COFF I": 1327,
+  "COFF II": 1647,
+  "COFF III": 1795,
+  "DESJEJUM": 2011,
+  "DESJEJUM ACAMPAMENTO": 2977,
+  "EVENTO": 8323,
+  "LANCHE ESPECIAL": 3796,
+  "LANCHE TURNO": 1202,
+  "PICOLE": 405,
+  "JANTAR": 2145,
+  "ALMOCO": 2145
 };
 
 
@@ -81,7 +84,8 @@ class Database{
         // const lastOrder = this.orders[this.orders.length - 1];
 
         // const id = lastOrder ? lastOrder.id + 1 : 0;
-        const price = ordersTable[order.type] * order.quantity;
+        // a divisao por 100 re-converte o valor para reais
+        const price = ordersTable[order.type] * order.quantity / 100;
         const targetDate = new Date(order.targetDate).toLocaleDateString('pt-BR')
 
         // this.orders.push({

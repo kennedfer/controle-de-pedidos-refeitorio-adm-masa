@@ -8,6 +8,8 @@ import { PendingPanel } from "../../components/PendingPanel"
 import { Divider } from "antd"
 import { ApprovedPanel } from "../../components/ApprovedPanel"
 
+import {motion} from 'framer-motion'
+
 function Home() {
   const [period, setPeriod] = useState({
     start: new Date(2024, 10, 11),   
@@ -20,14 +22,39 @@ function Home() {
     'Aprovados': <ApprovedPanel period={period} setPeriod={setPeriod}/>
   }
 
-  const panelState = useState('Pendentes');
+  const panelState = useState('Aprovados');
   const currentPanel = panelState[0]
+
+  function promptLogin(){
+    const acessToken = sessionStorage.getItem("cadastro-alibras-token");
+
+    if (!acessToken) {
+      const password = prompt('Senha de acesso?')
+      console.log(acessToken);
+
+      if(password == "admin2025"){
+        return sessionStorage.setItem("cadastro-alibras-token", "ok")
+      }
+
+      promptLogin();
+    }
+  }
+
+  useEffect(()=>{
+    if(currentPanel == 'Pendentes') promptLogin();
+  },[panelState])
 
   return (<>
     <DashboardSidebar panelState={panelState}/>
-    <main className="w-screen h-screen">
+    <motion.div
+        key={currentPanel}  // Garantindo que a animação seja acionada toda vez que o painel mudar
+        initial={{ opacity: 0, }}  // Início da animação
+        animate={{ opacity: 1,}}    // Fim da animação
+        exit={{ opacity: 0,}}     // Quando o painel sai
+        transition={{ duration: 0.5 }}     // Duração da animação
+      className="w-full max-h-screen overflow-auto transition-all">
        {panels[currentPanel]}
-    </main>
+    </motion.div>
   </>)
 }
 

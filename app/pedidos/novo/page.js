@@ -2,6 +2,7 @@
 
 import { Input, Select, InputNumber, Button, DatePicker, Card, Form } from "antd";
 import React, { useState } from "react";
+import { RedirectButton } from "../../../components/RedirectButton";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -37,12 +38,17 @@ export default function OrderPage() {
     })
 
     const data = await response.json();
+    console.log(data)
+
     setFormData(defaultFormData);
     form.resetFields();
   }
 
   return (
     <main className="grid place-items-center h-screen w-screen bg-[#fafafa]">
+      
+      <RedirectButton path="/pedidos" label="Voltar" size="small" className="absolute top-2 left-2"/>
+
       <Card className="w-[350px] shadow-md">
         <h2 className="text-xl text-center font-bold w-full">Novo Pedido</h2>
 

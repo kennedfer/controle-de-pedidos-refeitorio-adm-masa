@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  notes: {
+  comments: {
     type: String,
     trim: true,
     default: '',
@@ -35,10 +35,17 @@ const orderSchema = new mongoose.Schema({
     required: true,
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
+    trim: true,
   },
   targetDate:{
     type: String,
     required: true,
+    trim: true,
+  },
+  targetPlace:{
+    type: String,
+    required: true,
+    trim: true,
   }
 }, {
   timestamps: true,

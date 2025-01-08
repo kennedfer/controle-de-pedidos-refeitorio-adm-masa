@@ -22,8 +22,8 @@ function Home() {
   const panelState = useState('Aprovados');
   const currentPanel = panelState[0]
 
-  function promptLogin(){
-    const acessToken = sessionStorage.getItem("cadastro-alibras-token");
+  async function promptLogin(){
+    const acessToken = sessionStorage.getItem("cadastro-alibras-tokens");
 
     if (!acessToken) {
       const password = prompt('Senha de acesso?')
@@ -32,7 +32,10 @@ function Home() {
         return panelState[1]("Aprovados")
       }
 
-      if(password == "admin2025"){
+      const res = await fetch('/api/auth/login?password='+password)
+      const status = await res.json();
+
+      if(status.ok){
         return sessionStorage.setItem("cadastro-alibras-token", "ok")
       }
 

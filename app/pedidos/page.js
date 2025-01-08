@@ -1,16 +1,11 @@
 'use client'
 
-import { useEffect, useState } from "react"
-import { PeriodNavigator } from "../../components/PeriodNavigator"
-import { OrdersTable } from "../../components/PendingTable"
-import { DashboardSidebar } from "../../components/DashboardSidebar"
+import { useEffect, useState, useMemo } from "react"
+import { Sidebar } from "../../components/Sidebar"
 import { PendingPanel } from "../../components/PendingPanel"
-import { Divider } from "antd"
 import { ApprovedPanel } from "../../components/ApprovedPanel"
 
 import {motion} from 'framer-motion'
-import { useRouter } from "next/navigation"
-import Title from "antd/es/typography/Title"
 
 function Home() {
   const [period, setPeriod] = useState({
@@ -18,19 +13,17 @@ function Home() {
     end: new Date(2024, 11, 10) 
   });
 
-  const router = useRouter();
+  const panels = useMemo(() => ({
+    'Pendentes': <PendingPanel />,
+    'Aprovados': <ApprovedPanel period={period} setPeriod={setPeriod} />
+  }), [period, setPeriod]);
 
-  //MEMORIZAR ISSO react.MEMO
-  const panels = {
-    'Pendentes': <PendingPanel/>,
-    'Aprovados': <ApprovedPanel period={period} setPeriod={setPeriod}/>
-  }
 
   const panelState = useState('Aprovados');
   const currentPanel = panelState[0]
 
   function promptLogin(){
-    const acessToken = sessionStorage.getItem("cadastro-alibras-tokens");
+    const acessToken = sessionStorage.getItem("cadastro-alibras-token");
 
     if (!acessToken) {
       const password = prompt('Senha de acesso?')
@@ -52,13 +45,13 @@ function Home() {
   },[panelState])
 
   return (<>
-    <DashboardSidebar panelState={panelState}/>
+    <Sidebar panelState={panelState}/>
     <motion.div
-        key={currentPanel}  // Garantindo que a animação seja acionada toda vez que o painel mudar
-        initial={{ opacity: 0, }}  // Início da animação
-        animate={{ opacity: 1,}}    // Fim da animação
-        exit={{ opacity: 0,}}     // Quando o painel sai
-        transition={{ duration: 0.5 }}     // Duração da animação
+        key={currentPanel}  
+        initial={{ opacity: 0, }} 
+        animate={{ opacity: 1,}}    
+        exit={{ opacity: 0,}}    
+        transition={{ duration: 0.5 }}     
       className="w-full max-h-screen overflow-auto transition-all">
        {panels[currentPanel]}
     </motion.div>

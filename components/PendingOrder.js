@@ -1,10 +1,11 @@
-import { Button, Popover } from "antd";
+import { Button, Popconfirm, Popover } from "antd";
 import { useState } from "react";
 
 import { motion } from 'framer-motion'
 
-export function PendingOrder({ order, index, refresh }) {
-    const { owner, type, quantity, price, _id, targetDate, targetPlace, comments, createdAt} = order;
+export function PendingOrder({ order, index, refresh, toast }) {
+    const { owner, type, quantity, price, _id, targetDate, targetPlace, comments, createdAt } = order;
+
 
     const [isLoading, setIsLoading] = useState({
         approved: false,
@@ -20,12 +21,24 @@ export function PendingOrder({ order, index, refresh }) {
 
         setIsLoading(newIsLoading)
 
-        const response = await fetch('/api/order/' + _id, {
-            method: 'PUT',
-            body: status
-        })
-        const updatedOrder = await response.json();
-        refresh(prev => prev + 1);
+        try{
+            const response = await fetch('/api/order/' + _id, {
+                method: 'PUT',
+                body: status
+            })
+            const updatedOrder = await response.json();
+            
+            if(updatedOrder.status == 'approved'){
+                toast.success("Pedido aprovado!")
+            }else{
+                toast.warning("Pedido Reprovado!")
+            }
+
+            refresh(prev => prev + 1);
+
+        }catch(err){
+            toast.error(toast.INTERNET_ERROR_MESSAGE)
+        }
     }
 
     return <motion.tr
@@ -49,8 +62,18 @@ export function PendingOrder({ order, index, refresh }) {
         <td>{targetDate}</td>
         <td>{targetPlace}</td>
         <td className="flex  p-3 gap-3 w-full justify-center">
-            <Button onClick={() => handleClick("rejected")} loading={isLoading.rejected} size="small" className="pointer-events-auto" danger>REPROVAR</Button>
-            <Button onClick={() => handleClick("approved")} loading={isLoading.approved} size="small" className="pointer-events-auto hover:!text-green-300 hover:!border-green-300 text-green-400 border-green-400" >APROVAR</Button>
+            <Popconfirm
+                title="Reprovar pedido"
+                description="Tem certeza que quer reprovar o pedido?"
+                onConfirm={() => handleClick("rejected")}
+                // onCancel={()=>toast.error('cancell')}
+                okText="Reprovar"
+                cancelText="Cancelar"
+            >
+                <Button loading={isLoading.rejected} size="small" danger>REPROVAR</Button>
+            </Popconfirm>
+
+            <Button onClick={() => handleClick("approved")} loading={isLoading.approved} size="small" className="hover:!text-green-300 hover:!border-green-300 text-green-400 border-green-400" >APROVAR</Button>
         </td>
     </motion.tr>
 }

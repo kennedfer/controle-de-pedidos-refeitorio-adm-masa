@@ -1,8 +1,9 @@
 'use client'
 
-import { Input, Select, InputNumber, Button, DatePicker, Card, Form } from "antd";
+import { Input, Select, InputNumber, Button, DatePicker, Card, Form, message } from "antd";
 import React from "react";
 import { RedirectButton } from "../../../components/RedirectButton";
+import { useToast } from "../../../components/Toast";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -19,20 +20,30 @@ const defaultFormData = {
 export default function OrderPage() {
   const [form] = Form.useForm();
 
+  const [Toast, contextHolder] = useToast();
+
+
   async function handleSubmit(values) {
-    const response = await fetch('/api/order', {
-      method: 'POST',
-      body: JSON.stringify(values)
-    });
+    try {
+      const response = await fetch('/api/order', {
+        method: 'POST',
+        body: JSON.stringify(values)
+      });
 
-    const data = await response.json();
-    console.log(data);
+      const data = await response.json();
+      console.log(data)
+      Toast.success("Pedido realizado com sucesso!");
 
-    form.resetFields();
+      form.resetFields();
+    } catch (err) {
+      Toast.error(Toast.INTERNET_ERROR_MESSAGE)
+    }
   }
 
   return (
     <main className="grid place-items-center h-screen w-screen bg-[#fafafa]">
+      {contextHolder}
+
       <RedirectButton path="/pedidos" label="Voltar" size="small" className="absolute top-2 left-2" />
 
       <Card className="w-[350px] shadow-md">

@@ -1,8 +1,12 @@
 import {PendingOrder} from './PendingOrder'
+import { useToast } from './Toast';
 
 export function PendingTable({orders, refresh}){
+    const [Toast, contextHolder] = useToast();
+
     return (
     <table rules="all" className=" w-full table-auto text-xs">
+        {contextHolder}
         <thead className='border-b rounded-lg bg-[#fafafa] rounded-xl'>
         <tr>
             <th scope="col">Registrado Por</th>
@@ -18,7 +22,7 @@ export function PendingTable({orders, refresh}){
         </thead>
         <tbody>
         {
-            orders.map((order, i) => <PendingOrder refresh={refresh} key={order._id} index={i} order={order} />)
+            orders.map((order, i) => <PendingOrder toast={Toast} refresh={refresh} key={order._id} index={i} order={order} />)
         }
         </tbody>
     </table>)

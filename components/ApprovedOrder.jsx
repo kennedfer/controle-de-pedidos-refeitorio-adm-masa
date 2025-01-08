@@ -1,10 +1,11 @@
-import { Button } from "antd";
+import { Button, Popover } from "antd";
 import { motion } from 'framer-motion'
 
 export function ApprovedOrder({ order, i }) {
-    const { owner, type, quantity, price, targetDate } = order;
-
-    const formattedPrice = price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const { owner, type, quantity, price, targetDate, targetPlace, comments, createdAt } = order;
+    
+        const formattedCreatedAt = new Date(createdAt).toLocaleDateString('pt-BR')
+        const formattedPrice = price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 
     return <motion.tr
@@ -16,10 +17,17 @@ export function ApprovedOrder({ order, i }) {
             delay: i * 0.1             // Delay progressivo para cada item
         }}
         className="p-5 text-center border-b m-2 hover:bg-[#fafafa] duration-300 transition">
-        <th className="p-4" scope="row">{owner}</th>
+        <th scope="row">{owner}</th>
         <td>{type}</td>
         <td>{quantity}</td>
         <td>{formattedPrice}</td>
-        <td>{(targetDate)}</td>
+        <td>{
+            <Popover content={comments} title="Comentários" trigger="click">
+                <Button type="link">Comentários</Button>
+            </Popover>
+        }</td>
+        <td>{formattedCreatedAt}</td>
+        <td>{targetDate}</td>
+        <td>{targetPlace}</td>
     </motion.tr>
 }

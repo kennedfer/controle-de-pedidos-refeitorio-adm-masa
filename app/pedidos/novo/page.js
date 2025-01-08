@@ -1,7 +1,7 @@
 'use client'
 
 import { Input, Select, InputNumber, Button, DatePicker, Card, Form } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import { RedirectButton } from "../../../components/RedirectButton";
 
 const { TextArea } = Input;
@@ -13,41 +13,27 @@ const defaultFormData = {
   quantity: 1,
   costCenter: "",
   comments: "",
-  targetDate: new Date().toISOString().split('T')[0],
   targetPlace: ""
 }
 
 export default function OrderPage() {
   const [form] = Form.useForm();
-  const [formData, setFormData] = useState(defaultFormData);
 
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  }
-
-  async function handleSubmit(e) {
-
+  async function handleSubmit(values) {
     const response = await fetch('/api/order', {
       method: 'POST',
-      body: JSON.stringify(formData)
-    })
+      body: JSON.stringify(values)
+    });
 
     const data = await response.json();
-    console.log(data)
+    console.log(data);
 
-    setFormData(defaultFormData);
     form.resetFields();
   }
 
   return (
     <main className="grid place-items-center h-screen w-screen bg-[#fafafa]">
-      
-      <RedirectButton path="/pedidos" label="Voltar" size="small" className="absolute top-2 left-2"/>
+      <RedirectButton path="/pedidos" label="Voltar" size="small" className="absolute top-2 left-2" />
 
       <Card className="w-[350px] shadow-md">
         <h2 className="text-xl text-center font-bold w-full">Novo Pedido</h2>
@@ -55,31 +41,33 @@ export default function OrderPage() {
         <Form
           className="flex flex-col"
           form={form}
-
           layout={'vertical'}
-
-          onFinish={handleSubmit}>
-          {/* Nome do Proprietário */}
-          <Form.Item label="Solicitado Por" name="owner">
+          initialValues={defaultFormData}
+          onFinish={handleSubmit}
+        >
+          <Form.Item
+            rules={[
+              { required: true, message: 'Favor preencher com o nome do registrante' }
+            ]}
+            label="Registrado Por"
+            name="owner"
+          >
             <Input
-              name="owner"
               size="small"
-              value={formData.owner}
-              onChange={handleChange}
               placeholder="Ex.: Kenned Ferreira"
             />
           </Form.Item>
 
-          {/* Tipo de Pedido */}
-          <Form.Item label="Tipo de Pedido" name="type">
-            <div className="flex gap-1">
-              <Select
-                name="type"
-                size="small"
-                value={formData.type}
-                onChange={(value) => handleChange({ target: { name: 'type', value } })}
-                style={{ width: "70%" }}
-              >
+          <div className="grid grid-cols-3 gap-1 w-full">
+            <Form.Item
+              className="col-span-2"
+              rules={[
+                { required: true, message: 'Favor selecionar o tipo de pedido' },
+              ]}
+              label="Tipo de Pedido"
+              name="type"
+            >
+              <Select size="small">
                 <Option value="APRESENTACAO MUSICAL">APRESENTAÇÃO MUSICAL</Option>
                 <Option value="CAFE LITRO">CAFÉ LITRO</Option>
                 <Option value="CERVEJA">CERVEJA</Option>
@@ -95,29 +83,30 @@ export default function OrderPage() {
                 <Option value="PICOLE">PICOLE</Option>
                 <Option value="ALMOCO">ALMOÇO</Option>
                 <Option value="JANTAR">JANTAR</Option>
-
               </Select>
+            </Form.Item>
 
+            <Form.Item name="quantity" label="Quantidade" className="grow-0" rules={[
+              { required: true, message: 'Favor preencher a quantidade' }
+            ]}>
               <InputNumber
-                name="quantity"
                 size="small"
-                value={formData.quantity}
-                onChange={(value) => handleChange({ target: { name: 'quantity', value } })}
                 min={1}
                 max={100}
                 placeholder="Ex.: 10"
-                style={{ width: "30%" }}
+                className="w-full"
               />
-            </div>
-          </Form.Item>
+            </Form.Item>
+          </div>
 
-          <Form.Item label="Centro de Custo" name="type">
-            <Select
-              name="costCenter"
-              size="small"
-              value={formData.costCenter}
-              onChange={(value) => handleChange({ target: { name: 'costCenter', value } })}
-            >
+          <Form.Item
+            rules={[
+              { required: true, message: 'Favor selecionar o centro de custo' }
+            ]}
+            label="Centro de Custo"
+            name="costCenter"
+          >
+            <Select size="small">
               <Option value="102062-BOMBEAMENTO">102062 - BOMBEAMENTO</Option>
               <Option value="102101 - GEOLOGIA OPERACIONAL">102101 - GEOLOGIA OPERACIONAL</Option>
               <Option value="102102 - PLANEJAMENTO E TOPOGRAFIA">102102 - PLANEJAMENTO E TOPOGRAFIA</Option>
@@ -148,36 +137,39 @@ export default function OrderPage() {
               <Option value="409011 - GERENCIA GERAL">409011 - GERENCIA GERAL</Option>
               <Option value="601041 - COMUNIDADE">601041 - COMUNIDADE</Option>
               <Option value="602041 - EXPLORACAO GERENCIAMENTO MINA">602041 - EXPLORACAO GERENCIAMENTO MINA</Option>
-
             </Select>
           </Form.Item>
 
           <Form.Item label="Comentários" name="comments">
             <TextArea
-              name="comments"
               size="small"
-              value={formData.comments}
-              onChange={handleChange}
               placeholder="Ex.: Enviar limões para o churrasco"
               rows={4}
             />
           </Form.Item>
 
-          <Form.Item label="Data da Entrega" name="targetDate">
+          <Form.Item
+            rules={[
+              { required: true, message: 'Favor selecionar a data de entrega' }
+            ]}
+            label="Data da Entrega"
+            name="targetDate"
+          >
             <DatePicker
               className="w-full"
               size="small"
-              name="targetDate"
-              onChange={(date, dateString) => handleChange({ target: { name: 'targetDate', value: dateString } })}
             />
           </Form.Item>
 
-          <Form.Item label="Local da Entrega" name="targetPlace">
+          <Form.Item
+            rules={[
+              { required: true, message: 'Favor preencher o local da entrega' }
+            ]}
+            label="Local da Entrega"
+            name="targetPlace"
+          >
             <Input
-              name="targetPlace"
-              value={formData.targetPlace}
               size="small"
-              onChange={handleChange}
               placeholder="Ex.: Sala de Reunião TATAJUBA"
             />
           </Form.Item>

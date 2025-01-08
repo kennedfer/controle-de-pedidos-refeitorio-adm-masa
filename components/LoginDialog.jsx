@@ -1,22 +1,7 @@
-import { Card, Form, Input, Button } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { Card, Form, Input } from "antd";
 
-export function LoginDialog({handleSubmit}) {
+export function LoginDialog({ handleSubmit }) {
     const [form] = Form.useForm();
-
-    // useEffect(() => {
-    //     const acessToken = sessionStorage.getItem("token");
-
-    //     if (acessToken) {
-    //         const acessData = JSON.parse(acessToken);
-
-    //         if (acessData.password !== "admin2025") {
-    //             setIsOpen(true)
-    //         }
-    //     } else {
-    //         setIsOpen(true)
-    //     }
-    // }, [])
 
     return <Card className="login-dialog w-[250px] shadow-2xl absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
     >

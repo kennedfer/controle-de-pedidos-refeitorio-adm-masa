@@ -1,9 +1,7 @@
-import '../database/mongoose'
+import '../database/mongoose';
 import { Order } from "../models/order";
 
-
-// FEITO EM CENTAVOS PARA CORRIGIR BUGS
-// DE IMPRECISAO COM FLOATS
+// Tabela de preços em centavos
 const ordersTable = {
   "APRESENTACAO MUSICAL": 270653,
   "CAFE LITRO": 429,
@@ -22,88 +20,85 @@ const ordersTable = {
   "ALMOCO": 2145
 };
 
+class Database {
+  constructor() {
+    // this.orders = fakeData;
+  }
 
-const fakeData = [
-    {
-      "owner": "Kenned Ferreira",
-      "type": "apresentacaoMusical",
-      "quantity": 1,
-      "costCenter": "RH",
-      "notes": "paia",
-      "id": 0,
-      "price": 2706.53,
-      "status": "pending"
-    },
-    {
-      "owner": "Kenned Ferreira",
-      "type": "cafeLitro",
-      "quantity": "2",
-      "costCenter": "RH",
-      "notes": "paia",
-      "id": 1,
-      "price": 8.58,
-      "status": "pending"
+  async index(start, end, status) {
+    try {
+      const orders = await Order.find({
+        createdAt: {
+          $gte: new Date(start),
+          $lt: new Date(end)
+        },
+        status: {
+          "$eq": status
+        }
+      });
+      return orders;
+    } catch (error) {
+      console.error('Erro ao buscar pedidos:', error);
+      throw error;
     }
-  ]
+  }
 
-class Database{
-    constructor(){
-        // this.orders = fakeData;
+  async show(id) {
+    try {
+      return await Order.findById(id);
+    } catch (error) {
+      console.error('Erro ao buscar pedido:', error);
+      throw error;
     }
-    
-    async index(start, end, status){
-        const orders = await Order.find({
-          createdAt:{
-            $gte: new Date(start), 
-            $lt: new Date(end)
-          },
-          status:{
-             "$eq":status
-          }
-        });
+  }
 
-        return orders;
+  async update(id, status) {
+    try {
+      const order = await this.show(id);
+      if (!order) {
+        throw new Error('Pedido não encontrado');
+      }
+
+      order.status = status;
+      await order.save();
+
+      return order;
+    } catch (error) {
+      console.error('Erro ao atualizar pedido:', error);
+      throw error;
     }
+  }
 
-    async show(id){
-        return await Order.findById(id);
+  async store(order) {
+    try {
+      const price = this.calculatePrice(order.type, order.quantity);
+      const targetDate = this.formatDate(order.targetDate);
+
+      const newOrder = new Order({
+        ...order,
+        price,
+        targetDate
+      });
+
+      await newOrder.save();
+
+      return newOrder;
+    } catch (error) {
+      console.error('Erro ao criar pedido:', error);
+      throw error;
     }
+  }
 
-    async update(id, status){
-        const order = await this.show(id);
-
-        order.status = status
-        await order.save();
-
-        return order;
+  calculatePrice(type, quantity) {
+    if (!ordersTable[type]) {
+      throw new Error('Tipo de pedido inválido');
     }
+    return ordersTable[type] * quantity / 100;
+  }
 
-    async store(order){
-        // const lastOrder = this.orders[this.orders.length - 1];
-
-        // const id = lastOrder ? lastOrder.id + 1 : 0;
-        // a divisao por 100 re-converte o valor para reais
-        const price = ordersTable[order.type] * order.quantity / 100;
-        const targetDate = new Date(order.targetDate).toLocaleDateString('pt-BR')
-
-        // this.orders.push({
-        //     ...order,
-        //     id,
-        //     price
-        // })
-
-        // await Order.deleteMany({})
-        const newOrder = new Order({
-          ...order,
-          price,
-          targetDate
-        });
-
-        await newOrder.save();
-
-        return newOrder;
-        // return this.orders[this.orders.length-1]
-    }
+  formatDate(date) {
+    return new Date(date).toLocaleDateString('pt-BR');
+  }
 }
 
 export const db = new Database();

@@ -37,12 +37,12 @@ const orderSchema = new mongoose.Schema({
     default: 'pending',
     trim: true,
   },
-  targetDate:{
+  targetDate: {
     type: String,
     required: true,
     trim: true,
   },
-  targetPlace:{
+  targetPlace: {
     type: String,
     required: true,
     trim: true,

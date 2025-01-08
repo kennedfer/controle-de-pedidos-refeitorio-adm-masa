@@ -28,6 +28,6 @@ export function useToast() {
         success,
         error,
         warning,
-        INTERNET_ERROR_MESSAGE:"Erro: Verifique sua conexão de internet",
+        INTERNET_ERROR_MESSAGE: "Erro: Verifique sua conexão de internet",
     }, contextHolder]
 }

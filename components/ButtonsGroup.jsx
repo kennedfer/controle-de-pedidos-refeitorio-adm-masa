@@ -1,16 +1,14 @@
-import { WarningOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
+import { WarningOutlined, CheckCircleOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 
 const icons = {
     'Aprovados': <CheckCircleOutlined />,
     'Pendentes': <WarningOutlined />,
-    'Reprovados': <CloseCircleOutlined />
 }
 
 const classes = {
     'Aprovados': 'bg-green-400',
     'Pendentes': 'bg-amber-300',
-    'Reprovados': 'bg-red-400'
 }
 
 export function ButtonsGroup({ labels, selectButton, selected }) {

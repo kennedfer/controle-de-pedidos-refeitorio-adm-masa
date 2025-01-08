@@ -1,17 +1,16 @@
 'use client'
 
 import { useEffect, useState, useMemo } from "react"
-import { Sidebar } from "../../components/Sidebar"
-import { PendingPanel } from "../../components/PendingPanel"
-import { ApprovedPanel } from "../../components/ApprovedPanel"
+import { Sidebar } from "../components/Sidebar"
+import { PendingPanel } from "../components/PendingPanel"
+import { ApprovedPanel } from "../components/ApprovedPanel"
 
 import {motion} from 'framer-motion'
+import { calculateCurrentPeriod } from "../utils/period"
 
 function Home() {
-  const [period, setPeriod] = useState({
-    start: new Date(2024, 10, 11),   
-    end: new Date(2024, 11, 10) 
-  });
+  const currentPeriod = calculateCurrentPeriod();
+  const [period, setPeriod] = useState(currentPeriod);
 
   const panels = useMemo(() => ({
     'Pendentes': <PendingPanel />,
@@ -21,7 +20,6 @@ function Home() {
 
   const panelState = useState('Aprovados');
   const currentPanel = panelState[0]
-
 
   async function promptLogin(){
     const acessToken = sessionStorage.getItem("cadastro-alibras-tokens");

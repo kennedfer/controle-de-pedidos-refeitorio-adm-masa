@@ -29,7 +29,7 @@ export default function OrderPage() {
   return (
     <main className="grid place-items-center h-screen w-screen bg-[#fafafa]">
       {contextHolder}
-      <RedirectButton path="/pedidos" label="Voltar" size="small" className="absolute top-2 left-2" />
+      <RedirectButton path="/" label="Voltar" size="small" className="absolute top-2 left-2" />
       <Card className="w-[350px] shadow-md">
         <h2 className="text-xl text-center font-bold w-full">Novo Pedido</h2>
         <OrderForm form={form} onFinish={handleSubmit} />

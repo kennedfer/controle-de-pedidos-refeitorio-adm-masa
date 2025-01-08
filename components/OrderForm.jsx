@@ -90,38 +90,44 @@ export const OrderForm = ({ form, onFinish }) => (
             label="Centro de Custo"
             name="costCenter"
         >
-            <Select size="small">
-                <Option value="102062-BOMBEAMENTO">102062 - BOMBEAMENTO</Option>
-                <Option value="102101 - GEOLOGIA OPERACIONAL">102101 - GEOLOGIA OPERACIONAL</Option>
-                <Option value="102102 - PLANEJAMENTO E TOPOGRAFIA">102102 - PLANEJAMENTO E TOPOGRAFIA</Option>
-                <Option value="102103 - GEOTECNICA E HIDROLOGIA">102103 - GEOTECNICA E HIDROLOGIA</Option>
-                <Option value="102901 - ADMINISTRACAO DE MINA CEU ABERTO">102901 - ADMINISTRACAO DE MINA CEU ABERTO</Option>
-                <Option value="201011 - BRITAGEM">201011 - BRITAGEM</Option>
-                <Option value="202011 - MOAGEM">202011 - MOAGEM</Option>
-                <Option value="209011 - LIXIVIACAO/CIANETACAO">209011 - LIXIVIACAO/CIANETACAO</Option>
-                <Option value="210012 - DESSORÇÃO(ELUIÇAO)ELETROLISE">210012 - DESSORÇÃO(ELUIÇAO)ELETROLISE</Option>
-                <Option value="211012 - FUNDICAO">211012 - FUNDICAO</Option>
-                <Option value="212025 - DETOX">212025 - DETOX</Option>
-                <Option value="213011 - MANUTECAO ELETRICA">213011 - MANUTECAO ELETRICA</Option>
-                <Option value="213012 - MANUTENCAO MECANICA">213012 - MANUTENCAO MECANICA</Option>
-                <Option value="214011 - BARRAGEM DE REJEITO">214011 - BARRAGEM DE REJEITO</Option>
-                <Option value="290011 - ADMINISTRAÇÃO DA PLANTA">290011 - ADMINISTRAÇÃO DA PLANTA</Option>
-                <Option value="401011 - SEGURANCA">401011 - SEGURANCA</Option>
-                <Option value="401021 - SAUDE">401021 - SAUDE</Option>
-                <Option value="401031 - MEIO AMBIENTE">401031 - MEIO AMBIENTE</Option>
-                <Option value="401061 - GESTAO FUNDIARIA">401061 - GESTAO FUNDIARIA</Option>
-                <Option value="403011 - CONTROLADORIA">403011 - CONTROLADORIA</Option>
-                <Option value="405011 - SEGURANCA PATRIMONIAL">405011 - SEGURANCA PATRIMONIAL</Option>
-                <Option value="405021 - INFORMACAO E TECNOLOGIA">405021 - INFORMACAO E TECNOLOGIA</Option>
-                <Option value="405031 - PURCHASING, SUPPLY AND WAREHOU">405031 - PURCHASING, SUPPLY AND WAREHOU</Option>
-                <Option value="405041 - RECURSOS HUMANOS">405041 - RECURSOS HUMANOS</Option>
-                <Option value="405071 - ADMINISTRACAO GERENCIAMENTO">405071 - ADMINISTRACAO GERENCIAMENTO</Option>
-                <Option value="405072 - ALMOXARIFADO">405072 - ALMOXARIFADO</Option>
-                <Option value="405074 - PCP">405074 - PCP</Option>
-                <Option value="409011 - GERENCIA GERAL">409011 - GERENCIA GERAL</Option>
-                <Option value="601041 - COMUNIDADE">601041 - COMUNIDADE</Option>
-                <Option value="602041 - EXPLORACAO GERENCIAMENTO MINA">602041 - EXPLORACAO GERENCIAMENTO MINA</Option>
-            </Select>
+            <Select
+                showSearch
+                filterOption={(input, option) =>
+                    (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                options={[
+                    { value: "102062-BOMBEAMENTO", label: "102062 - BOMBEAMENTO" },
+                    { value: "102101 - GEOLOGIA OPERACIONAL", label: "102101 - GEOLOGIA OPERACIONAL" },
+                    { value: "102102 - PLANEJAMENTO E TOPOGRAFIA", label: "102102 - PLANEJAMENTO E TOPOGRAFIA" },
+                    { value: "102103 - GEOTECNICA E HIDROLOGIA", label: "102103 - GEOTECNICA E HIDROLOGIA" },
+                    { value: "102901 - ADMINISTRACAO DE MINA CEU ABERTO", label: "102901 - ADMINISTRACAO DE MINA CEU ABERTO" },
+                    { value: "201011 - BRITAGEM", label: "201011 - BRITAGEM" },
+                    { value: "202011 - MOAGEM", label: "202011 - MOAGEM" },
+                    { value: "209011 - LIXIVIACAO/CIANETACAO", label: "209011 - LIXIVIACAO/CIANETACAO" },
+                    { value: "210012 - DESSORÇÃO(ELUIÇAO)ELETROLISE", label: "210012 - DESSORÇÃO(ELUIÇAO)ELETROLISE" },
+                    { value: "211012 - FUNDICAO", label: "211012 - FUNDICAO" },
+                    { value: "212025 - DETOX", label: "212025 - DETOX" },
+                    { value: "213011 - MANUTECAO ELETRICA", label: "213011 - MANUTECAO ELETRICA" },
+                    { value: "213012 - MANUTENCAO MECANICA", label: "213012 - MANUTENCAO MECANICA" },
+                    { value: "214011 - BARRAGEM DE REJEITO", label: "214011 - BARRAGEM DE REJEITO" },
+                    { value: "290011 - ADMINISTRAÇÃO DA PLANTA", label: "290011 - ADMINISTRAÇÃO DA PLANTA" },
+                    { value: "401011 - SEGURANCA", label: "401011 - SEGURANCA" },
+                    { value: "401021 - SAUDE", label: "401021 - SAUDE" },
+                    { value: "401031 - MEIO AMBIENTE", label: "401031 - MEIO AMBIENTE" },
+                    { value: "401061 - GESTAO FUNDIARIA", label: "401061 - GESTAO FUNDIARIA" },
+                    { value: "403011 - CONTROLADORIA", label: "403011 - CONTROLADORIA" },
+                    { value: "405011 - SEGURANCA PATRIMONIAL", label: "405011 - SEGURANCA PATRIMONIAL" },
+                    { value: "405021 - INFORMACAO E TECNOLOGIA", label: "405021 - INFORMACAO E TECNOLOGIA" },
+                    { value: "405031 - PURCHASING, SUPPLY AND WAREHOU", label: "405031 - PURCHASING, SUPPLY AND WAREHOU" },
+                    { value: "405041 - RECURSOS HUMANOS", label: "405041 - RECURSOS HUMANOS" },
+                    { value: "405071 - ADMINISTRACAO GERENCIAMENTO", label: "405071 - ADMINISTRACAO GERENCIAMENTO" },
+                    { value: "405072 - ALMOXARIFADO", label: "405072 - ALMOXARIFADO" },
+                    { value: "405074 - PCP", label: "405074 - PCP" },
+                    { value: "409011 - GERENCIA GERAL", label: "409011 - GERENCIA GERAL" },
+                    { value: "601041 - COMUNIDADE", label: "601041 - COMUNIDADE" },
+                    { value: "602041 - EXPLORACAO GERENCIAMENTO MINA", label: "602041 - EXPLORACAO GERENCIAMENTO MINA" }
+                ]}
+                size="small" />
         </Form.Item>
 
         <Form.Item label="Comentários" name="comments">

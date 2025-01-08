@@ -3,8 +3,8 @@
 import React from "react";
 import { Card, Form } from "antd";
 import { RedirectButton } from "../../../components/RedirectButton";
-import { useToast } from "../../../components/Toast";
 import { OrderForm } from "../../../components/OrderForm"
+import { useToast } from "../../../hooks/Toast.js";
 
 export default function OrderPage() {
   const [form] = Form.useForm();

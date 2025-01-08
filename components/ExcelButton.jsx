@@ -8,7 +8,7 @@ export function ExcelButton({handler}){
     tooltip={<div>Exportar como planilha</div>}
     icon={<FileExcelOutlined/>}
     style={{
-      insetInlineEnd: 38,
+      insetInlineEnd: 45,
     }}
     onClick={handler} />
 }

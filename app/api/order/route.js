@@ -3,8 +3,8 @@ import { db } from "../../../database/db";
 export async function GET(request) {
     const searchParams = request.nextUrl.searchParams
 
-    const start = searchParams.get('start') || 0;
-    const end = searchParams.get('end') || Date.now();
+    const start = Number(searchParams.get('start')) || 0;
+    const end = Number(searchParams.get('end')) || Date.now();
     const status = searchParams.get('status');
 
 

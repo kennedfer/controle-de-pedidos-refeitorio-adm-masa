@@ -1,60 +1,39 @@
-import { Modal, Form, Input, Button } from "antd";
+import { Card, Form, Input, Button } from "antd";
 import { useEffect, useRef, useState } from "react";
 
-export function LoginDialog() {
+export function LoginDialog({handleSubmit}) {
     const [form] = Form.useForm();
-    const [isOpen, setIsOpen] = useState(false);
-    const formRef = useRef();
 
-    useEffect(() => {
-        const acessToken = sessionStorage.getItem("token");
+    // useEffect(() => {
+    //     const acessToken = sessionStorage.getItem("token");
 
-        if (acessToken) {
-            const acessData = JSON.parse(acessToken);
+    //     if (acessToken) {
+    //         const acessData = JSON.parse(acessToken);
 
-            if (acessData.password !== "admin2025") {
-                setIsOpen(true)
-            }
-        } else {
-            setIsOpen(true)
-        }
-    }, [])
+    //         if (acessData.password !== "admin2025") {
+    //             setIsOpen(true)
+    //         }
+    //     } else {
+    //         setIsOpen(true)
+    //     }
+    // }, [])
 
-    function handleLogin(){
-        formRef.current.submit();
-    }
-
-    return <Modal className="w-[250px]" open={isOpen} closable={false} onOk={handleLogin}
-        footer={[
-            <Button key="back" type="link">
-                Voltar
-            </Button>,
-            <Button key="submit" htmlType="submit" type="primary">
-                Login
-            </Button>,
-        ]}
-
+    return <Card className="login-dialog w-[250px] shadow-2xl absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
     >
-        <h3 className="text-center text-xl font-bold">Login</h3>
+        <h3 className="text-center text-xl font-bold">Entrar</h3>
 
         <Form
-            ref={formRef}
             className="flex flex-col gap-1"
             form={form}
-            onFinish={console.log}
+            onFinish={handleSubmit}
             layout="vertical"
         >
             <Form.Item
-                rules={[
-                    {
-                        required: true,
-                        message: "Informe seu nome de usuario"
-                    }
-                ]}
                 label="Usuário:" name="username">
                 <Input
                     name="username"
-                    placeholder="Ex.: kenned.ferreira"
+                    placeholder="administrativo.masa"
+                    disabled
                 />
             </Form.Item>
 
@@ -72,5 +51,5 @@ export function LoginDialog() {
                 />
             </Form.Item>
         </Form>
-    </Modal>
+    </Card>
 }

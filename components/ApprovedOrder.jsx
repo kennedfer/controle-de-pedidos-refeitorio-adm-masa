@@ -2,19 +2,19 @@ import { Button, Popover } from "antd";
 import { motion } from 'framer-motion'
 
 export function ApprovedOrder({ order, i }) {
-        const { owner, type, quantity, price, targetDate, targetPlace, comments, createdAt } = order;
-    
-        const formattedCreatedAt = new Date(createdAt).toLocaleDateString('pt-BR')
-        const formattedPrice = price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const { owner, type, quantity, price, targetDate, targetPlace, comments, createdAt } = order;
+
+    const formattedCreatedAt = new Date(createdAt).toLocaleDateString('pt-BR')
+    const formattedPrice = price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 
     return <motion.tr
-        initial={{ opacity: 0, }}  // Animação inicial
-        animate={{ opacity: 1,}}    // Animação final
-        exit={{ opacity: 0,}}      // Animação quando sai
+        initial={{ opacity: 0, }}  
+        animate={{ opacity: 1, }}   
+        exit={{ opacity: 0, }}     
         transition={{
-            duration: 0.5,                 // Duração da animação
-            delay: i * 0.1             // Delay progressivo para cada item
+            duration: 0.5,                 
+            delay: i * 0.1            
         }}
         className="p-5 text-center border-b m-2 hover:bg-[#fafafa] duration-300 transition">
         <th scope="row">{owner}</th>

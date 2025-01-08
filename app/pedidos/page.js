@@ -22,11 +22,12 @@ function Home() {
   const panelState = useState('Aprovados');
   const currentPanel = panelState[0]
 
+
   async function promptLogin(){
     const acessToken = sessionStorage.getItem("cadastro-alibras-tokens");
 
     if (!acessToken) {
-      const password = prompt('Senha de acesso?')
+      const password = prompt('Acesso restrito\nSenha de acesso:')
       
       if(password == null){
         return panelState[1]("Aprovados")

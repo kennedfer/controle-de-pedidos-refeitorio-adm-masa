@@ -21,33 +21,33 @@ export function PendingOrder({ order, index, refresh, toast }) {
 
         setIsLoading(newIsLoading)
 
-        try{
+        try {
             const response = await fetch('/api/order/' + _id, {
                 method: 'PUT',
                 body: status
             })
             const updatedOrder = await response.json();
-            
-            if(updatedOrder.status == 'approved'){
+
+            if (updatedOrder.status == 'approved') {
                 toast.success("Pedido aprovado!")
-            }else{
+            } else {
                 toast.warning("Pedido Reprovado!")
             }
 
             refresh(prev => prev + 1);
 
-        }catch(err){
+        } catch (err) {
             toast.error(toast.INTERNET_ERROR_MESSAGE)
         }
     }
 
     return <motion.tr
-        initial={{ opacity: 0, }}  // Animação inicial
-        animate={{ opacity: 1, }}    // Animação final
-        exit={{ opacity: 0, }}      // Animação quando sai
+        initial={{ opacity: 0, }}
+        animate={{ opacity: 1, }}
+        exit={{ opacity: 0, }}
         transition={{
-            duration: 0.5,                 // Duração da animação
-            delay: index * 0.1             // Delay progressivo para cada item
+            duration: 0.5,
+            delay: index * 0.1
         }} className=" p-5 text-center border-b hover:bg-[#fafafa] duration-300 transition">
         <th scope="row">{owner}</th>
         <td>{type}</td>
@@ -66,7 +66,6 @@ export function PendingOrder({ order, index, refresh, toast }) {
                 title="Reprovar pedido"
                 description="Tem certeza que quer reprovar o pedido?"
                 onConfirm={() => handleClick("rejected")}
-                // onCancel={()=>toast.error('cancell')}
                 okText="Reprovar"
                 cancelText="Cancelar"
             >

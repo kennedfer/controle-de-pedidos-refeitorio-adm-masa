@@ -52,8 +52,6 @@ class Database{
     }
     
     async index(start, end, status){
-        console.log(start, end, status)
-
         const orders = await Order.find({
           createdAt:{
             $gte: new Date(start), 

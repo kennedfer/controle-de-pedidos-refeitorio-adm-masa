@@ -8,6 +8,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
     "@heroicons/react": "^2.2.0",
+    "@sequelize/mysql": "^7.0.0-alpha.43",
     "antd": "^5.22.7",
     "framer-motion": "^11.16.0",
     "mongoose": "^8.9.3",

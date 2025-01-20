@@ -1,5 +1,8 @@
 import '../database/mongoose';
+import './mysql'
 import { Order } from "../models/order";
+import OrderService from '../services/orders.service';
+import pool from './mysql';
 
 // Tabela de preços em centavos
 const ordersTable = {
@@ -22,20 +25,13 @@ const ordersTable = {
 
 class Database {
   constructor() {
-    // this.orders = fakeData;
+    this.orderService = new OrderService(pool);
   }
 
   async index(start, end, status) {
     try {
-      const orders = await Order.find({
-        createdAt: {
-          $gte: new Date(start),
-          $lt: new Date(end)
-        },
-        status: {
-          "$eq": status
-        }
-      });
+      const orders = await this.orderService.index();
+      console.log(orders);
       return orders;
     } catch (error) {
       console.error('Erro ao buscar pedidos:', error);
@@ -71,21 +67,11 @@ class Database {
 
   async store(order) {
     try {
-      const price = this.calculatePrice(order.type, order.quantity);
-      const targetDate = this.formatDate(order.targetDate);
-
-      const newOrder = new Order({
-        ...order,
-        price,
-        targetDate
-      });
-
-      await newOrder.save();
-
+      order.price = this.calculatePrice(order.type, order.quantity);
+      const newOrder = await this.orderService.store(order);
       return newOrder;
-    } catch (error) {
-      console.error('Erro ao criar pedido:', error);
-      throw error;
+    } catch (err) {
+      throw err;
     }
   }
 

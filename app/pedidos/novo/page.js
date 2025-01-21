@@ -1,13 +1,12 @@
 'use client'
 
 import React from "react";
-import { Card, Form } from "antd";
+import { Card } from "@blueprintjs/core";
 import { RedirectButton } from "../../../components/RedirectButton";
 import { OrderForm } from "../../../components/OrderForm"
 import { useToast } from "../../../hooks/Toast.js";
 
 export default function OrderPage() {
-  const [form] = Form.useForm();
   const [Toast, contextHolder] = useToast();
 
   async function handleSubmit(values) {
@@ -30,9 +29,9 @@ export default function OrderPage() {
     <main className="grid place-items-center h-screen w-screen bg-[#fafafa]">
       {contextHolder}
       <RedirectButton path="/" label="Voltar" size="small" className="absolute top-2 left-2" />
-      <Card className="w-[350px] shadow-md">
+      <Card >
         <h2 className="text-xl text-center font-bold w-full">Novo Pedido</h2>
-        <OrderForm form={form} onFinish={handleSubmit} />
+        <OrderForm onFinish={handleSubmit} />
       </Card>
     </main>
   );

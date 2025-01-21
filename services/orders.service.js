@@ -9,7 +9,6 @@ class OrderService {
   }
 
   formatDate(targetDate) {
-    // Formate a data para o formato MySQL (YYYY-MM-DD)
     const date = new Date(targetDate);
     return date.toISOString().split('T')[0];
   }

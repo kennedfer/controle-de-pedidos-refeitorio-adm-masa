@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { Sidebar } from "../components/Sidebar";
-// import { PendingPanel } from "../components/PendingPanel";
-// import { ApprovedPanel } from "../components/ApprovedPanel";
+import { PendingPanel } from "../components/PendingPanel";
+import { ApprovedPanel } from "../components/ApprovedPanel";
 
 // import { motion } from "framer-motion";
 import { calculateCurrentPeriod } from "../utils/period";
@@ -13,13 +13,13 @@ function Home() {
   const currentPeriod = calculateCurrentPeriod();
   const [period, setPeriod] = useState(currentPeriod);
 
-  // const panels = useMemo(
-  //   () => ({
-  //     Pendentes: <PendingPanel />,
-  //     Aprovados: <ApprovedPanel period={period} setPeriod={setPeriod} />,
-  //   }),
-  //   [period, setPeriod],
-  // );
+  const panels = useMemo(
+    () => ({
+      Pendentes: <PendingPanel />,
+      Aprovados: <ApprovedPanel period={period} setPeriod={setPeriod} />,
+    }),
+    [period, setPeriod],
+  );
 
   const panelState = useState("Aprovados");
   const currentPanel = panelState[0];

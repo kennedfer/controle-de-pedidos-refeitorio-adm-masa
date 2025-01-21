@@ -1,6 +1,3 @@
-import '../database/mongoose';
-import './mysql'
-import { Order } from "../models/order";
 import OrderService from '../services/orders.service';
 import pool from './mysql';
 

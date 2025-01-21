@@ -1,14 +1,20 @@
+import { Card, Divider, Tab, Tabs, TabsExpander } from "@blueprintjs/core";
 import { ButtonsGroup } from "./ButtonsGroup";
 import { RedirectButton } from "./RedirectButton";
 
-export function Sidebar({panelState}){
-    const [selectedPanel, setSelectedPanel] = panelState;
+export function Sidebar({ panelState }) {
+  const [selectedPanel, setSelectedPanel] = panelState;
 
-    return (
-        <div className="border-r h-screen rounded-xl font-bold w-1/5 text-white p-4 flex flex-col gap-2">
-            <h3 className="text-gray-500" >Pedidos</h3>
-            <ButtonsGroup labels={["Pendentes", "Aprovados"]} selected={selectedPanel} selectButton={setSelectedPanel}/>
-            <RedirectButton label="Novo Pedido" path="/pedidos/novo"/>
-        </div>    
-    );    
+  return (
+    <Card compact className="h-screen w-1/6 flex flex-col gap-0">
+      <span className="bp5-heading">Pedidos</span>
+      <Divider />
+      <Tabs className="w-full" fill vertical id="TabsExample">
+        <Tab id="aprovados" title="Aprovados" />
+        <Tab id="pendentes" title="Pendentes" />
+        <TabsExpander />
+      </Tabs>
+      <RedirectButton label="Novo Pedido" path="/pedidos/novo" />
+    </Card>
+  );
 }

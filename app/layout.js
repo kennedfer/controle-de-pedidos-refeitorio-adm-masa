@@ -1,4 +1,7 @@
 import '../global.css'
+import "normalize.css";
+import "@blueprintjs/core/lib/css/blueprint.css";
+import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 
 export default function Layout({ children }) {
   return (
@@ -10,7 +13,7 @@ export default function Layout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className='flex'>
-          {children}
+        {children}
       </body>
     </html>
   );

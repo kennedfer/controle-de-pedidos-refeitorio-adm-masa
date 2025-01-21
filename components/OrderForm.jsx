@@ -7,9 +7,12 @@ import {
   NumericInput,
   TextArea,
   HTMLSelect,
+  Divider,
   MenuItem,
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
+import { DateInput3, DatePicker3 } from "@blueprintjs/datetime2";
+import { ptBR } from "date-fns/locale";
 
 const defaultFormData = {
   owner: "",
@@ -38,9 +41,7 @@ const costCenterOptions = [
 
 // Custom render para opções
 const renderOption = (option, { handleClick }) => (
-  <li key={option.value} onClick={handleClick}>
-    {option.label}
-  </li>
+  <MenuItem text={option.label} key={option.value} onClick={handleClick} />
 );
 
 export const OrderForm = ({ form, onFinish }) => {
@@ -59,23 +60,24 @@ export const OrderForm = ({ form, onFinish }) => {
     onFinish(formData);
   };
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col">
+    <form onSubmit={handleSubmit} className="flex flex-nowrap gap-3">
       {/* Registrado Por */}
-      <FormGroup
-        label="Registrado Por"
-        labelFor="owner"
-        labelInfo="(obrigatório)"
-      >
-        <InputGroup
-          id="owner"
-          placeholder="Ex.: Kenned Ferreira"
-          value={formData.owner || ""}
-          onChange={(e) => handleInputChange("owner", e.target.value)}
-        />
-      </FormGroup>
+      <div className="flex flex-col w-full">
+        <FormGroup
+          label="Registrado Por"
+          labelFor="owner"
+          labelInfo="(obrigatório)"
+        >
+          <InputGroup
+            id="owner"
+            placeholder="Ex.: Kenned Ferreira"
+            value={formData.owner || ""}
+            onChange={(e) => handleInputChange("owner", e.target.value)}
+          />
+        </FormGroup>
 
-      {/* Tipo de Pedido e Quantidade */}
-      <div className="grid grid-cols-3 gap-1 w-full">
+        {/* Tipo de Pedido e Quantidade */}
+        {/* <div className="grid grid-cols-3 gap-1 w-full"> */}
         <FormGroup
           label="Tipo de Pedido"
           labelFor="type"
@@ -117,80 +119,87 @@ export const OrderForm = ({ form, onFinish }) => {
             id="quantity"
             min={1}
             max={100}
+            fill
             value={formData.quantity || ""}
             onValueChange={(value) => handleInputChange("quantity", value)}
           />
         </FormGroup>
-      </div>
+        {/* </div> */}
 
-      {/* Centro de Custo */}
-      <FormGroup
-        label="Centro de Custo"
-        labelFor="costCenter"
-        labelInfo="(obrigatório)"
-      >
-        <Select
-          fill
-          items={costCenterOptions}
-          itemRenderer={renderOption}
-          onItemSelect={(e) => handleInputChange("costCenter", e.value)}
-          filterable
-          popoverProps={{ minimal: true }}
+        {/* Centro de Custo */}
+        <FormGroup
+          label="Centro de Custo"
+          labelFor="costCenter"
+          labelInfo="(obrigatório)"
         >
-          <Button
+          <Select
             fill
-            alignText="left"
-            text={formData.costCenter}
-            rightIcon="double-caret-vertical"
+            items={costCenterOptions}
+            itemRenderer={renderOption}
+            onItemSelect={(e) => handleInputChange("costCenter", e.value)}
+            filterable
+            popoverProps={{ minimal: true }}
+          >
+            <Button
+              fill
+              alignText="left"
+              text={formData.costCenter || "Selecione um Centro de Custo"}
+              rightIcon="double-caret-vertical"
+            />
+          </Select>
+        </FormGroup>
+
+        {/* Comentários */}
+        <FormGroup label="Comentários" labelFor="comments">
+          <TextArea
+            className="!w-full"
+            id="comments"
+            placeholder="Ex.: Enviar limões para o churrasco"
+            value={formData.comments || ""}
+            onChange={(e) => handleInputChange("comments", e.target.value)}
           />
-        </Select>
-      </FormGroup>
+        </FormGroup>
 
-      {/* Comentários */}
-      <FormGroup label="Comentários" labelFor="comments">
-        <TextArea
-          className="!w-full"
-          id="comments"
-          placeholder="Ex.: Enviar limões para o churrasco"
-          value={formData.comments || ""}
-          onChange={(e) => handleInputChange("comments", e.target.value)}
-        />
-      </FormGroup>
+        {/* Data da Entrega */}
+      </div>
+      <Divider />
+      <div className="flex flex-col w-full">
+        <FormGroup
+          label="Data da Entrega"
+          labelFor="targetDate"
+          labelInfo="(obrigatório)"
+        >
+          <DatePicker3
+            id="targetDate"
+            highlightCurrentDay={true}
+            formatDate={(date) => date.toLocaleDateString()}
+            parseDate={(str) => new Date(str)}
+            locale={ptBR}
+            placeholder="Selecione uma data"
+            value={formData.targetDate || null}
+            onChange={(date) => handleInputChange("targetDate", date)}
+          />
+        </FormGroup>
 
-      {/* Data da Entrega */}
-      <FormGroup
-        label="Data da Entrega"
-        labelFor="targetDate"
-        labelInfo="(obrigatório)"
-      >
-        {/* <DateInput
-          id="targetDate"
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
-          placeholder="Selecione uma data"
-          value={formData.targetDate || null}
-          onChange={(date) => handleInputChange("targetDate", date)}
-        /> */}
-      </FormGroup>
+        {/* Local da Entrega */}
+        <FormGroup
+          label="Local da Entrega"
+          labelFor="targetPlace"
+          labelInfo="(obrigatório)"
+        >
+          <InputGroup
+            id="targetPlace"
+            placeholder="Ex.: Sala de Reunião TATAJUBA"
+            value={formData.targetPlace || ""}
+            onChange={(e) => handleInputChange("targetPlace", e.target.value)}
+          />
+        </FormGroup>
 
-      {/* Local da Entrega */}
-      <FormGroup
-        label="Local da Entrega"
-        labelFor="targetPlace"
-        labelInfo="(obrigatório)"
-      >
-        <InputGroup
-          id="targetPlace"
-          placeholder="Ex.: Sala de Reunião TATAJUBA"
-          value={formData.targetPlace || ""}
-          onChange={(e) => handleInputChange("targetPlace", e.target.value)}
-        />
-      </FormGroup>
-
-      {/* Botão de Submissão */}
-      <Button type="submit" intent="primary" large>
-        Cadastrar Pedido
-      </Button>
+        {/* Botão de Submissão */}
+        <Button fill type="submit" intent="primary">
+          Cadastrar Pedido
+        </Button>
+      </div>
     </form>
   );
 };

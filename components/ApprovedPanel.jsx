@@ -3,7 +3,7 @@ import { PeriodNavigator } from "./PeriodNavigator";
 import { ApprovedTable } from "./ApprovedTable";
 import { ExcelButton } from "./ExcelButton";
 
-import { exportToExcel } from "../utils/excel";
+import { exportToExcelFile } from "../utils/excel";
 // import { Empty } from "antd";
 import { useOrders } from "../hooks/orders";
 

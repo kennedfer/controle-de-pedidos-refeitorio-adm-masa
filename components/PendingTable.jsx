@@ -21,13 +21,8 @@ export function PendingTable({ orders, refresh }) {
         </tr>
       </thead>
       <tbody>
-        {orders.map((order, i) => (
-          <PendingOrder
-            refresh={refresh}
-            key={order._id}
-            index={i}
-            order={order}
-          />
+        {orders.map((order) => (
+          <PendingOrder refresh={refresh} key={order.id} order={order} />
         ))}
       </tbody>
     </table>

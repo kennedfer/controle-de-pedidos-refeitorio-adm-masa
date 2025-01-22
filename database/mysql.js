@@ -1,10 +1,10 @@
-import * as mysql from 'mysql2/promise'
+import * as mysql from "mysql2/promise";
 
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'pedidos_alibras',
-  password: 'pedidos_alibras123',
-  database: 'pedidos_alibras',
+  host: "localhost",
+  user: "pedidos_alibras",
+  password: "pedidos_alibras123",
+  database: "pedidos_alibras",
 });
 
 pool.execute(`
@@ -21,7 +21,11 @@ pool.execute(`
     targetPlace VARCHAR(255) NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-  `)
+  );
+
+  -- criação de indices para desempenho
+  CREATE INDEX idx_status ON Orders(status);
+  CREATE INDEX idx_status_targetDate ON Orders(status, targetDate);
+`);
 
 export default pool;

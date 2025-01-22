@@ -1,20 +1,34 @@
-import * as XLSX from 'xlsx';
+import ExcelJS from "exceljs";
 
-export function exportToExcel(orders) {
-    const formattedOrders = orders.map(order =>({
-        "Solicitado por": order.owner,
-        "Tipo de Pedido": order.type,
-        "Quantidade (Unidade)": order.quantity,
-        "Centro de Custo": order.costCenter,
-        "Valor do Pedido": order.price,
-        "Data da Entrega": order.targetDate,
-        "Detalhes": order.notes
-    }))
+export async function exportToExcel(orders) {
+    // Criação de uma nova planilha
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Dados");
 
-    const ws = XLSX.utils.json_to_sheet(formattedOrders);
+    // Definir o cabeçalho
+    worksheet.columns = [
+        { header: "Solicitado por", key: "owner", width: 20 },
+        { header: "Tipo de Pedido", key: "type", width: 20 },
+        { header: "Quantidade (Unidade)", key: "quantity", width: 20 },
+        { header: "Centro de Custo", key: "costCenter", width: 20 },
+        { header: "Valor do Pedido", key: "price", width: 20 },
+        { header: "Data da Entrega", key: "targetDate", width: 20 },
+        { header: "Detalhes", key: "notes", width: 30 },
+    ];
 
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Dados');
+    // Adicionar os dados das ordens na planilha
+    orders.forEach((order) => {
+        worksheet.addRow({
+            owner: order.owner,
+            type: order.type,
+            quantity: order.quantity,
+            costCenter: order.costCenter,
+            price: order.price,
+            targetDate: order.targetDate,
+            notes: order.notes,
+        });
+    });
 
-    XLSX.writeFile(wb, 'dados.xlsx');
-};
+    // Gerar o arquivo Excel
+    await workbook.xlsx.writeFile("dados.xlsx");
+}

@@ -135,6 +135,7 @@ class Database {
    * @throws {Error} Lança um erro se não for possível criar o pedido.
    */
   async store(order) {
+    console.log(order)
     try {
       order.price = this.#calculatePrice(order.type, order.quantity);
       return await this.orderService.store(order);
@@ -144,4 +145,4 @@ class Database {
   }
 }
 
-export default Database;
+export const db = new Database();

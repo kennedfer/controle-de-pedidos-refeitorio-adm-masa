@@ -6,6 +6,8 @@ import {
   Button,
 } from "@blueprintjs/core";
 import { OrderForm } from "./OrderForm";
+import { Toaster } from "../hooks/toast";
+import { handleError } from "../utils/error";
 
 export const OrderDialog = ({ dialogState }) => {
   async function handleSubmit(values) {
@@ -16,11 +18,12 @@ export const OrderDialog = ({ dialogState }) => {
       });
 
       const data = await response.json();
-      // Toast.success("Pedido realizado com sucesso!");.+
-
-      form.resetFields();
-    } catch (err) {
-      // Toast.error(Toast.INTERNET_ERROR_MESSAGE);
+      Toaster.success("Pedido realizado com sucesso!");
+      closeDialog();
+      // form.resetFields();
+    } catch (error) {
+      Toaster.danger("Erro: Verifique sua conexão de internet");
+      handleError(error, "Criação de pedido");
     }
   }
 
@@ -33,7 +36,7 @@ export const OrderDialog = ({ dialogState }) => {
       title="Novo Pedido"
       isOpen={dialogState[0].open}
       style={{
-        width: "750px",
+        width: "850px",
       }}
       onClose={closeDialog}
     >

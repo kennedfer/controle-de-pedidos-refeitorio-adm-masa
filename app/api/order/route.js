@@ -8,7 +8,7 @@ export async function GET(request) {
     const status = searchParams.get('status');
 
 
-    
+
     const orders = await db.index(start, end, status);
     return Response.json(orders)
 }

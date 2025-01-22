@@ -28,6 +28,8 @@ class OrderService {
    * @returns {Array} Um array contendo os valores do pedido para inserção na tabela `Orders`.
    */
   #getOrderValues(order) {
+    const targetDate = order.targetDate.replace('T', ' ').replace('Z', '');
+
     return [
       order.owner,
       order.type,
@@ -36,7 +38,7 @@ class OrderService {
       order.comments || "",
       order.price,
       order.status || "pending",
-      order.targetDate,
+      targetDate,
       order.targetPlace,
     ];
   }
@@ -108,7 +110,7 @@ class OrderService {
    */
   async store(order) {
     try {
-      await this.pool.execute("START TRANSACTION");
+      await this.pool.query("START TRANSACTION");
 
       const query = `
         INSERT INTO Orders (owner, type, quantity, costCenter, comments, price, status, targetDate, targetPlace)
@@ -118,13 +120,13 @@ class OrderService {
       const values = this.#getOrderValues(order);
 
       await this.pool.execute(query, values);
-      await this.pool.execute("COMMIT");
+      await this.pool.query("COMMIT");
 
       return {
         ok: true,
       };
     } catch (error) {
-      await this.pool.execute("ROLLBACK");
+      await this.pool.query("ROLLBACK");
 
       handleError(error, "criação de pedido");
     }

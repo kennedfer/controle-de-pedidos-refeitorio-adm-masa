@@ -7,6 +7,8 @@ const pool = mysql.createPool({
   database: "pedidos_alibras",
 });
 
+//! Isso será feito no docker-compose via 'init.sql' erros simples de indices duplicados podem ser ignorados, por hora
+
 pool.execute(`
   CREATE TABLE IF NOT EXISTS Orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -22,10 +24,14 @@ pool.execute(`
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
-
-  -- criação de indices para desempenho
-  CREATE INDEX idx_status ON Orders(status);
-  CREATE INDEX idx_status_targetDate ON Orders(status, targetDate);
 `);
+
+// pool.execute(`
+//   CREATE INDEX idx_status ON Orders(status);
+// `);
+
+// pool.execute(`
+//   CREATE INDEX idx_status_targetDate ON Orders(status, targetDate);
+// `);
 
 export default pool;

@@ -8,8 +8,8 @@ import { exportToExcelFile } from "../utils/excel";
 import { useOrders } from "../hooks/orders";
 
 export function ApprovedPanel({ period, setPeriod }) {
-  // const orders = useOrders("approved", period);
-  const orders = [];
+  const orders = useOrders("pending", period);
+  // const orders = [];
 
   return (
     <>

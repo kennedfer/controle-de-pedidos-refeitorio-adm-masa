@@ -21,7 +21,7 @@ function Home() {
     [period, setPeriod],
   );
 
-  const panelState = useState("Aprovados");
+  const panelState = useState("Pendentes");
   const currentPanel = panelState[0];
 
   async function promptLogin() {

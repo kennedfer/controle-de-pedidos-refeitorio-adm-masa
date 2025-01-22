@@ -6,7 +6,6 @@ export function PendingTable({ orders, refresh }) {
 
   return (
     <table rules="all" className=" w-full table-auto text-xs">
-      {contextHolder}
       <thead className="border-b rounded-lg bg-[#fafafa] rounded-xl">
         <tr>
           <th scope="col">Registrado Por</th>

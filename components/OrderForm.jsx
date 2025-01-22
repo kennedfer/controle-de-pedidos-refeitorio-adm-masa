@@ -44,7 +44,7 @@ const renderOption = (option, { handleClick }) => (
   <MenuItem text={option.label} key={option.value} onClick={handleClick} />
 );
 
-export const OrderForm = ({ form, onFinish }) => {
+export const OrderForm = ({ form, onSubmit }) => {
   const [formData, setFormData] = React.useState(defaultFormData);
 
   const handleCostCenterChange = (item) => {
@@ -57,7 +57,7 @@ export const OrderForm = ({ form, onFinish }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onFinish(formData);
+    onSubmit(formData);
   };
   return (
     <form onSubmit={handleSubmit} className="flex flex-nowrap gap-3">
@@ -84,7 +84,7 @@ export const OrderForm = ({ form, onFinish }) => {
           labelInfo="(obrigatório)"
           className="col-span-2"
         >
-          <HTMLSelect
+          {/* <HTMLSelect
             id="type"
             fill
             options={[
@@ -106,7 +106,23 @@ export const OrderForm = ({ form, onFinish }) => {
             ]}
             value={formData.type || ""}
             onChange={(e) => handleInputChange("type", e.target.value)}
-          />
+          /> */}
+
+          <Select
+            fill
+            items={typeOptions}
+            itemRenderer={renderOption}
+            onItemSelect={(e) => handleInputChange("type", e.value)}
+            filterable
+            popoverProps={{ minimal: true }}
+          >
+            <Button
+              fill
+              alignText="left"
+              text={formData.type || "Selecione um tipo de refeição"}
+              rightIcon="double-caret-vertical"
+            />
+          </Select>
         </FormGroup>
 
         <FormGroup

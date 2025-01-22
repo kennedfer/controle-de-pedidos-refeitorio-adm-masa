@@ -1,3 +1,5 @@
+import { handleError } from "../utils/error";
+
 /**
  * Serviço para gerenciar pedidos no banco de dados.
  */
@@ -40,18 +42,32 @@ class OrderService {
   }
 
   /**
-   * Retorna todos os registros de pedidos.
+   * Retorna todos os registros de pedidos dentro de um intervalo de datas e status específicos.
+   *
+   * Este método permite filtrar os pedidos pela coluna `status` e por um intervalo de datas (`targetDate`),
+   * retornando apenas os pedidos que atendem a esses critérios.
+   *
    * @async
-   * @returns {Promise<Array>} Lista de pedidos.
-   * @throws {Error} Lança um erro caso falhe ao buscar os pedidos.
+   * @param {string} orderStatus - O status dos pedidos a serem buscados. Pode ser "pending", "approved" ou "rejected".
+   * @param {string} startPeriod - A data de início do intervalo de tempo (inclusiva). Formato: 'YYYY-MM-DD'.
+   * @param {string} endPeriod - A data final do intervalo de tempo (exclusiva). Formato: 'YYYY-MM-DD'.
+   * @returns {Promise<Array>} Retorna uma lista de pedidos que atendem aos critérios de filtro.
+   * @throws {Error} Lança um erro caso falhe ao buscar os pedidos ou realizar a consulta.
    */
-  async index() {
+  async index(startPeriod, endPeriod, orderStatus) {
     try {
-      const [results, _] = await this.pool.query("SELECT * FROM Orders");
+      const values = [orderStatus, startPeriod, endPeriod];
+
+      const [results, _] = await this.pool.query(
+        `
+        SELECT * FROM Orders
+        WHERE status=? AND targetDate >= ? AND targetDate < ?;`,
+        values,
+      );
+
       return results;
     } catch (error) {
-      console.error("Erro ao buscar pedidos:", error);
-      throw new Error("Erro ao buscar pedidos");
+      handleError(error, "busca de pedidos");
     }
   }
 
@@ -70,8 +86,7 @@ class OrderService {
       );
       return results;
     } catch (error) {
-      console.error("Erro ao buscar pedido:", error);
-      throw new Error("Erro ao buscar pedido");
+      handleError(error, "busca de pedido único");
     }
   }
 
@@ -111,8 +126,7 @@ class OrderService {
     } catch (error) {
       await this.pool.execute("ROLLBACK");
 
-      console.error("Erro ao criar pedido:", error);
-      throw error;
+      handleError(error, "criação de pedido");
     }
   }
 
@@ -141,8 +155,7 @@ class OrderService {
     } catch (error) {
       await this.pool.execute("ROLLBACK");
 
-      console.error("Erro ao atualizar pedido:", error);
-      throw error;
+      handleError(error, "atualização de pedido");
     }
   }
 

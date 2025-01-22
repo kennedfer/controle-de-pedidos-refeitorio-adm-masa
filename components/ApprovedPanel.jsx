@@ -8,7 +8,8 @@ import { exportToExcelFile } from "../utils/excel";
 import { useOrders } from "../hooks/orders";
 
 export function ApprovedPanel({ period, setPeriod }) {
-  const orders = useOrders("approved", period);
+  // const orders = useOrders("approved", period);
+  const orders = [];
 
   return (
     <>
@@ -16,7 +17,7 @@ export function ApprovedPanel({ period, setPeriod }) {
         <PeriodNavigator period={period} setPeriod={setPeriod} />
       </div>
 
-      <ExcelButton handler={() => exportToExcel(orders)} />
+      <ExcelButton handler={() => exportToExcelFile(orders)} />
 
       <div className="p-2">
         <ApprovedTable orders={orders} />

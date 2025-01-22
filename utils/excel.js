@@ -1,4 +1,5 @@
 import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 
 /**
  * Exporta uma lista de pedidos para um arquivo Excel.
@@ -43,5 +44,6 @@ export async function exportToExcelFile(orders) {
     });
 
     //! TODO: Necessário mudar o nome do arquivo
-    await workbook.xlsx.writeFile("dados.xlsx");
+    const buf = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buf]), "abc.xlsx");
 }

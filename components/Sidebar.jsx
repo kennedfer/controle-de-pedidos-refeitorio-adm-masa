@@ -11,7 +11,7 @@ import { OrderDialog } from "./OrderDialog";
 
 export function Sidebar({ panelState }) {
   const [selectedPanel, setSelectedPanel] = panelState;
-  const dialogState = useState({
+  const [dialogState, setDialogState] = useState({
     open: false,
   });
 
@@ -27,13 +27,12 @@ export function Sidebar({ panelState }) {
           vertical
         >
           <Tab
-            heigth="100%"
+            height="100%"
             tagContent={1}
-            style={{ width: "100% !important" }}
+            className="w-full"
             id="aprovados"
             title="Aprovados"
           />
-
           <Tab id="pendentes" title="Pendentes" />
           <TabsExpander />
           <Button
@@ -43,7 +42,7 @@ export function Sidebar({ panelState }) {
               marginTop: "auto",
             }}
             onClick={() =>
-              dialogState[1]({
+              setDialogState({
                 open: true,
               })
             }
@@ -51,8 +50,7 @@ export function Sidebar({ panelState }) {
             Novo Pedido
           </Button>
         </Tabs>
-        <OrderDialog dialogState={dialogState} />
-        {/* <RedirectButton label="Novo Pedido" path="/pedidos/novo" /> */}
+        <OrderDialog dialogState={[dialogState, setDialogState]} />
       </Card>
     </>
   );

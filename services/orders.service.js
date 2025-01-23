@@ -57,10 +57,13 @@ class OrderService {
    * @throws {Error} Lança um erro caso falhe ao buscar os pedidos ou realizar a consulta.
    */
   async index(startPeriod, endPeriod, orderStatus) {
+    let connection;
+
     try {
+      connection = await this.pool.getConnection();
       const values = [orderStatus, startPeriod, endPeriod];
 
-      const [results, _] = await this.pool.query(
+      const [results, _] = await connection.query(
         `
         SELECT * FROM Orders
         WHERE status=? AND targetDate >= ? AND targetDate < ?;`,
@@ -70,6 +73,8 @@ class OrderService {
       return results;
     } catch (error) {
       handleError(error, "busca de pedidos");
+    } finally {
+      if (connection) connection.release();
     }
   }
 
@@ -81,14 +86,20 @@ class OrderService {
    * @throws {Error} Lança um erro caso falhe ao buscar o pedido.
    */
   async show(id) {
+    let connection;
+
     try {
-      const [results, _] = await this.pool.query(
+      connection = await this.pool.getConnection();
+
+      const [results, _] = await connection.query(
         "SELECT * FROM Orders WHERE id=?",
         [id],
       );
       return results;
     } catch (error) {
       handleError(error, "busca de pedido único");
+    } finally {
+      if (connection) connection.release();
     }
   }
 
@@ -109,8 +120,12 @@ class OrderService {
    * @throws {Error} Lança um erro caso falhe ao criar o pedido ou realizar a transação.
    */
   async store(order) {
+    let connection;
+
     try {
-      await this.pool.query("START TRANSACTION");
+      // await this.connection.query("START TRANSACTION");
+      connection = await this.pool.getConnection();
+      await connection.beginTransaction();
 
       const query = `
         INSERT INTO Orders (owner, type, quantity, costCenter, comments, price, status, targetDate, targetPlace)
@@ -119,16 +134,20 @@ class OrderService {
 
       const values = this.#getOrderValues(order);
 
-      await this.pool.execute(query, values);
-      await this.pool.query("COMMIT");
+      await connection.execute(query, values);
+      // await this.connection.query("COMMIT");
+      await connection.commit();
 
       return {
         ok: true,
       };
     } catch (error) {
-      await this.pool.query("ROLLBACK");
+      // await this.connection.query("ROLLBACK");
+      if (connection) await connection.rollback();
 
       handleError(error, "criação de pedido");
+    } finally {
+      if (connection) connection.release();
     }
   }
 
@@ -141,24 +160,31 @@ class OrderService {
    * @throws {Error} Lança um erro caso falhe ao atualizar o status do pedido ou realizar a transação.
    */
   async update(id, status) {
+    let connection;
     try {
-      await this.pool.query("START TRANSACTION");
+      // await this.connection.query("START TRANSACTION");
+      connection = await this.pool.getConnection();
+      await connection.beginTransaction();
 
       const query = `
         UPDATE Orders SET status=? WHERE id=?
       `;
 
-      await this.pool.execute(query, [status, id]);
-      await this.pool.query("COMMIT");
+      await connection.execute(query, [status, id]);
+      // await this.connection.query("COMMIT");
+      await connection.commit();
 
       return {
         ok: true,
         status,
       };
     } catch (error) {
-      await this.pool.query("ROLLBACK");
+      // await this.connection.query("ROLLBACK");
+      if (connection) await connection.rollback();
 
       handleError(error, "atualização de pedido");
+    } finally {
+      if (connection) connection.release();
     }
   }
 
@@ -170,20 +196,25 @@ class OrderService {
    * @throws {Error} Lança um erro caso falhe ao excluir o pedido ou realizar a transação.
    */
   async delete(id) {
+    let connection;
+
     try {
-      await this.pool.execute("START TRANSACTION");
+      connection = this.pool.getConnection();
+      await connection.beginTransaction();
 
       const query = "DELETE FROM Orders WHERE id=?";
-      await this.pool.execute(query, [id]);
+      await connection.execute(query, [id]);
 
-      await this.pool.execute("COMMIT");
+      await connection.commit();
 
       return { ok: true };
     } catch (error) {
-      await this.pool.execute("ROLLBACK");
+      if (connection) await connection.rollback();
 
       console.error("Erro ao excluir pedido:", error);
       throw error;
+    } finally {
+      if (connection) await connection.release();
     }
   }
 }

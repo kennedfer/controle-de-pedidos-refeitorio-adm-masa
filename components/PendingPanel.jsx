@@ -44,7 +44,7 @@ export function PendingPanel() {
 
   return (
     <>
-      <div onClick={() => setRefresh(refresh + 1)} className="p-2 ">
+      <div onClick={() => setRefresh(refresh + 1)}>
         <PendingTable refresh={setRefresh} orders={orders} />
       </div>
     </>

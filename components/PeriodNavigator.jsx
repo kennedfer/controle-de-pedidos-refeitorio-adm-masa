@@ -28,7 +28,7 @@ export function PeriodNavigator({ period, setPeriod }) {
   };
 
   return (
-    <div className="w-full flex p-2 pb-0 gap-2">
+    <div className="w-full flex">
       <Button small onClick={() => changePeriod("previous")}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

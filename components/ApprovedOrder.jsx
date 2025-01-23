@@ -1,4 +1,4 @@
-import { Button } from "@blueprintjs/core";
+import { Button, Classes, Popover } from "@blueprintjs/core";
 
 export function ApprovedOrder({ order, i }) {
   const {
@@ -25,11 +25,21 @@ export function ApprovedOrder({ order, i }) {
       <td>{quantity}</td>
       <td>{formattedPrice}</td>
       <td>
-        {
-          <div content={comments} title="Comentários" trigger="click">
-            <Button type="link">Comentários</Button>
-          </div>
-        }
+        <Popover
+          interactionKind="click"
+          popoverClassName={Classes.POPOVER_CONTENT_SIZING}
+          placement="bottom"
+          content={<span>{comments || "Pedido sem comentários"}</span>}
+          renderTarget={({ isOpen, ...targetProps }) => (
+            <Button
+              {...targetProps}
+              intent="primary"
+              minimal
+              text="Comentários"
+              small
+            />
+          )}
+        />
       </td>
       <td>{formattedCreatedAt}</td>
       <td>{targetDate}</td>

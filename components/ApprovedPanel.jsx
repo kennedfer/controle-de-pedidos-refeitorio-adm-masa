@@ -44,7 +44,7 @@ export function ApprovedPanel({ period, setPeriod }) {
 
       <ExcelButton handler={() => exportToExcelFile(orders)} />
 
-      <div className="p-2">
+      <div>
         <ApprovedTable orders={orders} />
       </div>
       {/* {orders.length == 0 && <Empty description={

@@ -15,13 +15,13 @@ function Home() {
 
   const panels = useMemo(
     () => ({
-      Pendentes: <PendingPanel />,
-      Aprovados: <ApprovedPanel period={period} setPeriod={setPeriod} />,
+      pending: <PendingPanel />,
+      approveds: <ApprovedPanel period={period} setPeriod={setPeriod} />,
     }),
     [period, setPeriod],
   );
 
-  const panelState = useState("Pendentes");
+  const panelState = useState("pending");
   const currentPanel = panelState[0];
 
   // async function promptLogin() {
@@ -52,14 +52,7 @@ function Home() {
   return (
     <>
       <Sidebar panelState={panelState} />
-      <div
-        key={currentPanel}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-h-screen overflow-auto transition-all"
-      >
+      <div className="w-full max-h-screen overflow-auto transition-all">
         {panels[currentPanel]}
       </div>
     </>

@@ -51,7 +51,7 @@ export function PendingOrder({ order, refresh, toast }) {
   }
 
   return (
-    <tr className=" p-5 text-center border-b hover:bg-[#fafafa] duration-300 transition">
+    <tr className="text-center border-b hover:bg-[#fafafa] duration-300 transition">
       <th scope="row">{owner}</th>
       <td>{type}</td>
       <td>{quantity}</td>
@@ -68,6 +68,7 @@ export function PendingOrder({ order, refresh, toast }) {
               intent="primary"
               minimal
               text="Comentários"
+              small
             />
           )}
         />
@@ -75,7 +76,7 @@ export function PendingOrder({ order, refresh, toast }) {
       <td>{formattedCreatedAt}</td>
       <td>{targetDate}</td>
       <td>{targetPlace}</td>
-      <td className="flex  p-3 gap-3 w-full justify-center">
+      <td className="whitespace-nowrap">
         <Popover
           interactionKind="click"
           popoverClassName={Classes.POPOVER_CONTENT_SIZING}
@@ -108,6 +109,7 @@ export function PendingOrder({ order, refresh, toast }) {
           }
           renderTarget={({ isOpen, ...targetProps }) => (
             <Button
+              small
               {...targetProps}
               icon="trash"
               loading={isLoading.rejected}
@@ -118,6 +120,8 @@ export function PendingOrder({ order, refresh, toast }) {
           )}
         />
         <Button
+          small
+          className="ml-2"
           onClick={() => handleClick("approved")}
           loading={isLoading.approved}
           intent="success"

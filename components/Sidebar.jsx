@@ -32,15 +32,19 @@ export function Sidebar({ panelState }) {
           fill={true}
           id="TabsExample"
           vertical
+          onChange={(e) => {
+            setSelectedPanel(e);
+          }}
         >
           <Tab
-            height="100%"
             tagContent={1}
-            className="w-full"
-            id="aprovados"
-            title="Aprovados"
+            icon="warning-sign"
+            id="pending"
+            title="Pendentes"
+            
           />
-          <Tab id="pendentes" title="Pendentes" />
+
+          <Tab icon="tick" id="approveds" title="Aprovados" />
           <TabsExpander />
         </Tabs>
         <OrderDialog dialogState={[dialogState, setDialogState]} />

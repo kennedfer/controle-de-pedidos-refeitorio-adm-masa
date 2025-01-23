@@ -11,6 +11,7 @@ export function ApprovedPanel({ period, setPeriod }) {
   // const orders = useOrders("pending", period);
   const orders = [
     {
+      id: 0,
       owner: "John Doe",
       type: "Product",
       quantity: 10,
@@ -23,6 +24,7 @@ export function ApprovedPanel({ period, setPeriod }) {
       targetPlace: "Warehouse 1",
     },
     {
+      id: 1,
       owner: "Kenned Ferreira",
       type: "Product",
       quantity: 10,

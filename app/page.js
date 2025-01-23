@@ -7,11 +7,13 @@ import { ApprovedPanel } from "../components/ApprovedPanel";
 
 // import { motion } from "framer-motion";
 import { calculateCurrentPeriod } from "../utils/period";
+import { LoginDialog } from "../components/LoginDialog";
 // import { OrderDialog } from "../components/OrderDialog";
 
 function Home() {
   const currentPeriod = calculateCurrentPeriod();
   const [period, setPeriod] = useState(currentPeriod);
+  const [loginOpen, setLoginOpen] = useState(true);
 
   const panels = useMemo(
     () => ({
@@ -22,7 +24,7 @@ function Home() {
   );
 
   const panelState = useState("pending");
-  const currentPanel = panelState[0];
+  const currentPanel = useMemo(() => panelState[0], [panelState]);
 
   // async function promptLogin() {
   //   const acessToken = sessionStorage.getItem("cadastro-alibras-tokens");
@@ -45,9 +47,24 @@ function Home() {
   //   }
   // }
 
-  // useEffect(() => {
-  //   if (currentPanel == "Pendentes") promptLogin();
-  // }, [panelState]);
+  //! TODO: FAZER O TRY-CATCH
+  async function handleLogin(password, loginResultCallback) {
+    const res = await fetch("/api/auth/login?password=" + password);
+    const status = await res.json();
+
+    console.log("senha: ", password);
+
+    if (status.ok) {
+      setLoginOpen(false);
+      sessionStorage.setItem("cadastro-alibras-token", "ok");
+    }
+
+    loginResultCallback(status.ok);
+  }
+
+  useEffect(() => {
+    if (currentPanel == "pending") setLoginOpen(true);
+  }, [currentPanel]);
 
   return (
     <>
@@ -55,6 +72,7 @@ function Home() {
       <div className="w-full max-h-screen overflow-auto transition-all">
         {panels[currentPanel]}
       </div>
+      <LoginDialog isOpen={loginOpen} onSubmit={handleLogin} />
     </>
   );
 }

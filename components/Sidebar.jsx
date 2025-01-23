@@ -41,7 +41,6 @@ export function Sidebar({ panelState }) {
             icon="warning-sign"
             id="pending"
             title="Pendentes"
-            
           />
 
           <Tab icon="tick" id="approveds" title="Aprovados" />

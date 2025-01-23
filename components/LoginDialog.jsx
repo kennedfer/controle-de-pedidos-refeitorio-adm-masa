@@ -1,40 +1,83 @@
-import { Card, Form, Input } from "antd";
+import {
+  Dialog,
+  Divider,
+  FormGroup,
+  InputGroup,
+  Card,
+  Button,
+  Tooltip,
+} from "@blueprintjs/core";
+import { useState } from "react";
+import { Toaster } from "../hooks/toast";
 
-export function LoginDialog({ handleSubmit }) {
-    const [form] = Form.useForm();
+export function LoginDialog({ onSubmit, isOpen }) {
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-    return <Card className="login-dialog w-[250px] shadow-2xl absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-    >
-        <h3 className="text-center text-xl font-bold">Entrar</h3>
+  const handleLockClick = () => setShowPassword(!showPassword);
 
-        <Form
-            className="flex flex-col gap-1"
-            form={form}
-            onFinish={handleSubmit}
-            layout="vertical"
-        >
-            <Form.Item
-                label="Usuário:" name="username">
-                <Input
-                    name="username"
-                    placeholder="administrativo.masa"
-                    disabled
-                />
-            </Form.Item>
+  const lockButton = (
+    <Tooltip content={`${showPassword ? "Esconder" : "Mostrar"} senha`}>
+      <Button
+        icon={showPassword ? "unlock" : "lock"}
+        minimal={true}
+        onClick={handleLockClick}
+      />
+    </Tooltip>
+  );
 
-            <Form.Item
-                rules={[
-                    {
-                        required: true,
-                        message: "Informe seu nome de usuario"
-                    }
-                ]}
-                label="Senha:" name="password">
-                <Input
-                    name="password"
-                    type="password"
-                />
-            </Form.Item>
-        </Form>
-    </Card>
+  const getLoginResult = (logged) => {
+    if (!logged) {
+      Toaster.danger("Erro: Senha incorreta! Tente novamente");
+      return setIsLoading(false);
+    }
+
+    Toaster.success("Login realizado com sucesso!");
+    setIsLoading(false);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+    onSubmit(password, getLoginResult);
+  };
+
+  return (
+    <Dialog isOpen={isOpen} title="Entrar no sistema">
+      <Card className="flex gap-4">
+        <form onSubmit={handleSubmit}>
+          <FormGroup
+            label="Usuário:"
+            labelFor="login_user"
+            labelInfo="(obrigatório)"
+          >
+            <InputGroup id="login_user" disabled value="administrativo.masa" />
+          </FormGroup>
+          <FormGroup
+            label="Senha:"
+            labelFor="login_password"
+            labelInfo="(obrigatório)"
+          >
+            <InputGroup
+              id="login_password"
+              value={password}
+              rightElement={lockButton}
+              type={showPassword ? "text" : "password"}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormGroup>
+          <Button
+            className="w-full"
+            intent="primary"
+            type="submit"
+            text="Entrar"
+            loading={isLoading}
+          />
+        </form>
+        <Divider />
+        <div>IMAGE</div>
+      </Card>
+    </Dialog>
+  );
 }

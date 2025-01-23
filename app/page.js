@@ -24,30 +24,30 @@ function Home() {
   const panelState = useState("Pendentes");
   const currentPanel = panelState[0];
 
-  async function promptLogin() {
-    const acessToken = sessionStorage.getItem("cadastro-alibras-tokens");
+  // async function promptLogin() {
+  //   const acessToken = sessionStorage.getItem("cadastro-alibras-tokens");
 
-    if (!acessToken) {
-      const password = prompt("Acesso restrito\nSenha de acesso:");
+  //   if (!acessToken) {
+  //     const password = prompt("Acesso restrito\nSenha de acesso:");
 
-      if (password == null) {
-        return panelState[1]("Aprovados");
-      }
+  //     if (password == null) {
+  //       return panelState[1]("Aprovados");
+  //     }
 
-      const res = await fetch("/api/auth/login?password=" + password);
-      const status = await res.json();
+  //     const res = await fetch("/api/auth/login?password=" + password);
+  //     const status = await res.json();
 
-      if (status.ok) {
-        return sessionStorage.setItem("cadastro-alibras-token", "ok");
-      }
+  //     if (status.ok) {
+  //       return sessionStorage.setItem("cadastro-alibras-token", "ok");
+  //     }
 
-      promptLogin();
-    }
-  }
+  //     promptLogin();
+  //   }
+  // }
 
-  useEffect(() => {
-    if (currentPanel == "Pendentes") promptLogin();
-  }, [panelState]);
+  // useEffect(() => {
+  //   if (currentPanel == "Pendentes") promptLogin();
+  // }, [panelState]);
 
   return (
     <>

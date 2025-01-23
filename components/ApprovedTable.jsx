@@ -1,9 +1,9 @@
-import { ApprovedOrder } from './ApprovedOrder';
+import { ApprovedOrder } from "./ApprovedOrder";
 
 export function ApprovedTable({ orders }) {
   return (
     <table rules="all" className="w-full table-fixed text-xs">
-      <thead className='border-b bg-[#fafafa] rounded-xl'>
+      <thead className="border-b bg-[#fafafa] rounded-xl">
         <tr>
           <th scope="col">Registrado Por</th>
           <th scope="col">Tipo</th>
@@ -16,8 +16,8 @@ export function ApprovedTable({ orders }) {
         </tr>
       </thead>
       <tbody>
-        {orders.map((order, i) => (
-          <ApprovedOrder key={order._id} order={order} i={i} />
+        {orders.map((order) => (
+          <ApprovedOrder key={order.id} order={order} />
         ))}
       </tbody>
     </table>

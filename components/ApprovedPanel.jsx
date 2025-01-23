@@ -8,8 +8,33 @@ import { exportToExcelFile } from "../utils/excel";
 import { useOrders } from "../hooks/orders";
 
 export function ApprovedPanel({ period, setPeriod }) {
-  const orders = useOrders("pending", period);
-  // const orders = [];
+  // const orders = useOrders("pending", period);
+  const orders = [
+    {
+      owner: "John Doe",
+      type: "Product",
+      quantity: 10,
+      costCenter: "CC1001",
+      comments: "Urgent order",
+      price: 100.0,
+      status: "pending",
+      createdAt: "2025-01-22T03:00:00.000Z",
+      targetDate: "2025-01-22T03:00:00.000Z",
+      targetPlace: "Warehouse 1",
+    },
+    {
+      owner: "Kenned Ferreira",
+      type: "Product",
+      quantity: 10,
+      costCenter: "CC1001",
+      comments: "Urgent order",
+      price: 100.0,
+      status: "pending",
+      createdAt: "2025-01-22T03:00:00.000Z",
+      targetDate: "2025-01-22T03:00:00.000Z",
+      targetPlace: "Warehouse 1",
+    },
+  ];
 
   return (
     <>

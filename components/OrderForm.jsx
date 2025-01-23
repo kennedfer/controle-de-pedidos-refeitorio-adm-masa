@@ -70,6 +70,7 @@ export const OrderForm = ({ form, onSubmit }) => {
         >
           <InputGroup
             id="owner"
+            required
             placeholder="Ex.: Kenned Ferreira"
             value={formData.owner || ""}
             onChange={(e) => handleInputChange("owner", e.target.value)}

@@ -1,4 +1,4 @@
-import { Button } from "@blueprintjs/core";
+import { Button, Classes, Popover } from "@blueprintjs/core";
 import { useState } from "react";
 
 export function PendingOrder({ order, refresh, toast }) {
@@ -57,24 +57,71 @@ export function PendingOrder({ order, refresh, toast }) {
       <td>{quantity}</td>
       <td>{formattedPrice}</td>
       <td>
-        {
-          <div content={comments} title="Comentários" trigger="click">
-            <Button type="link">Comentários</Button>
-          </div>
-        }
+        <Popover
+          interactionKind="click"
+          popoverClassName={Classes.POPOVER_CONTENT_SIZING}
+          placement="bottom"
+          content={<span>{comments || "Pedido sem comentários"}</span>}
+          renderTarget={({ isOpen, ...targetProps }) => (
+            <Button
+              {...targetProps}
+              intent="primary"
+              minimal
+              text="Comentários"
+            />
+          )}
+        />
       </td>
       <td>{formattedCreatedAt}</td>
       <td>{targetDate}</td>
       <td>{targetPlace}</td>
       <td className="flex  p-3 gap-3 w-full justify-center">
-        <Button loading={isLoading.rejected} size="small" danger>
-          REPROVAR
-        </Button>
+        <Popover
+          interactionKind="click"
+          popoverClassName={Classes.POPOVER_CONTENT_SIZING}
+          placement="bottom"
+          content={
+            <div key="text">
+              <p>Tem certeza que quer reprovar o pedido?</p>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: 15,
+                }}
+              >
+                <Button
+                  className={Classes.POPOVER_DISMISS}
+                  style={{ marginRight: 10 }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={() => handleClick("reproved")}
+                  intent={"danger"}
+                  className={Classes.POPOVER_DISMISS}
+                >
+                  Reprovar
+                </Button>
+              </div>
+            </div>
+          }
+          renderTarget={({ isOpen, ...targetProps }) => (
+            <Button
+              {...targetProps}
+              icon="trash"
+              loading={isLoading.rejected}
+              intent="danger"
+            >
+              REPROVAR
+            </Button>
+          )}
+        />
         <Button
           onClick={() => handleClick("approved")}
           loading={isLoading.approved}
-          size="small"
-          className="hover:!text-green-300 hover:!border-green-300 text-green-400 border-green-400"
+          intent="success"
+          icon="tick"
         >
           APROVAR
         </Button>

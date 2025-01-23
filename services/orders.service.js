@@ -28,7 +28,7 @@ class OrderService {
    * @returns {Array} Um array contendo os valores do pedido para inserção na tabela `Orders`.
    */
   #getOrderValues(order) {
-    const targetDate = order.targetDate.replace('T', ' ').replace('Z', '');
+    const targetDate = order.targetDate.replace("T", " ").replace("Z", "");
 
     return [
       order.owner,
@@ -142,20 +142,21 @@ class OrderService {
    */
   async update(id, status) {
     try {
-      await this.pool.execute("START TRANSACTION");
+      await this.pool.query("START TRANSACTION");
 
       const query = `
         UPDATE Orders SET status=? WHERE id=?
       `;
 
       await this.pool.execute(query, [status, id]);
-      await this.pool.execute("COMMIT");
+      await this.pool.query("COMMIT");
 
       return {
         ok: true,
+        status,
       };
     } catch (error) {
-      await this.pool.execute("ROLLBACK");
+      await this.pool.query("ROLLBACK");
 
       handleError(error, "atualização de pedido");
     }

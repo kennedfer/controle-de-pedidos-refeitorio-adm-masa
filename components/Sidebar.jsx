@@ -18,7 +18,14 @@ export function Sidebar({ panelState }) {
   return (
     <>
       <Card compact className="h-screen w-1/6 flex flex-col gap-0">
-        <span className="bp5-heading">Pedidos</span>
+        <h4
+          style={{
+            margin: "0 !important",
+          }}
+          className="bp5-heading"
+        >
+          Pedidos
+        </h4>
         <Divider />
         <Tabs
           className="w-full flex-grow flex flex-col"
@@ -35,22 +42,22 @@ export function Sidebar({ panelState }) {
           />
           <Tab id="pendentes" title="Pendentes" />
           <TabsExpander />
-          <Button
-            fill
-            intent="primary"
-            style={{
-              marginTop: "auto",
-            }}
-            onClick={() =>
-              setDialogState({
-                open: true,
-              })
-            }
-          >
-            Novo Pedido
-          </Button>
         </Tabs>
         <OrderDialog dialogState={[dialogState, setDialogState]} />
+        <Button
+          fill
+          intent="primary"
+          style={{
+            marginTop: "auto",
+          }}
+          onClick={() =>
+            setDialogState({
+              open: true,
+            })
+          }
+        >
+          Novo Pedido
+        </Button>
       </Card>
     </>
   );

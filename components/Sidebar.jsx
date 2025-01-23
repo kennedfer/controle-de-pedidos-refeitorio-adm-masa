@@ -43,7 +43,7 @@ export function Sidebar({ panelState }) {
             title="Pendentes"
           />
 
-          <Tab icon="tick" id="approveds" title="Aprovados" />
+          <Tab icon="tick" id="approved" title="Aprovados" />
           <TabsExpander />
         </Tabs>
         <OrderDialog dialogState={[dialogState, setDialogState]} />

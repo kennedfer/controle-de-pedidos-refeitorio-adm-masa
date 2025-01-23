@@ -19,34 +19,13 @@ function Home() {
   const panels = useMemo(
     () => ({
       pending: <PendingPanel />,
-      approveds: <ApprovedPanel period={period} setPeriod={setPeriod} />,
+      approved: <ApprovedPanel period={period} setPeriod={setPeriod} />,
     }),
     [period, setPeriod],
   );
 
-  const panelState = useState("pending");
+  const panelState = useState("approved");
   const currentPanel = useMemo(() => panelState[0], [panelState]);
-
-  // async function promptLogin() {
-  //   const acessToken = sessionStorage.getItem("cadastro-alibras-tokens");
-
-  //   if (!acessToken) {
-  //     const password = prompt("Acesso restrito\nSenha de acesso:");
-
-  //     if (password == null) {
-  //       return panelState[1]("Aprovados");
-  //     }
-
-  //     const res = await fetch("/api/auth/login?password=" + password);
-  //     const status = await res.json();
-
-  //     if (status.ok) {
-  //       return sessionStorage.setItem("cadastro-alibras-token", "ok");
-  //     }
-
-  //     promptLogin();
-  //   }
-  // }
 
   //! TODO: FAZER O TRY-CATCH
   async function handleLogin(password, loginResultCallback) {

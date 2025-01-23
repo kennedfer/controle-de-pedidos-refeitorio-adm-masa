@@ -65,8 +65,10 @@ class OrderService {
 
       const [results, _] = await connection.query(
         `
-        SELECT * FROM Orders
-        WHERE status=? AND targetDate >= ? AND targetDate < ?;`,
+        SELECT * FROM orders
+        WHERE status = ?
+          AND targetDate > FROM_UNIXTIME(? / 1000)
+          AND targetDate < FROM_UNIXTIME(? / 1000);`,
         values,
       );
 
@@ -123,7 +125,6 @@ class OrderService {
     let connection;
 
     try {
-      // await this.connection.query("START TRANSACTION");
       connection = await this.pool.getConnection();
       await connection.beginTransaction();
 
@@ -135,14 +136,12 @@ class OrderService {
       const values = this.#getOrderValues(order);
 
       await connection.execute(query, values);
-      // await this.connection.query("COMMIT");
       await connection.commit();
 
       return {
         ok: true,
       };
     } catch (error) {
-      // await this.connection.query("ROLLBACK");
       if (connection) await connection.rollback();
 
       handleError(error, "criação de pedido");
@@ -162,7 +161,6 @@ class OrderService {
   async update(id, status) {
     let connection;
     try {
-      // await this.connection.query("START TRANSACTION");
       connection = await this.pool.getConnection();
       await connection.beginTransaction();
 
@@ -171,7 +169,6 @@ class OrderService {
       `;
 
       await connection.execute(query, [status, id]);
-      // await this.connection.query("COMMIT");
       await connection.commit();
 
       return {
@@ -179,7 +176,6 @@ class OrderService {
         status,
       };
     } catch (error) {
-      // await this.connection.query("ROLLBACK");
       if (connection) await connection.rollback();
 
       handleError(error, "atualização de pedido");

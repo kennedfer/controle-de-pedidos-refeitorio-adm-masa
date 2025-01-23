@@ -1,13 +1,14 @@
 import { Button, Classes, Popover } from "@blueprintjs/core";
 import { useState } from "react";
+import { Toaster } from "../hooks/toast";
 
-export function PendingOrder({ order, refresh, toast }) {
+export function PendingOrder({ order, refresh }) {
   const {
     owner,
     type,
     quantity,
     price,
-    _id,
+    id,
     targetDate,
     targetPlace,
     comments,
@@ -32,21 +33,21 @@ export function PendingOrder({ order, refresh, toast }) {
     setIsLoading(newIsLoading);
 
     try {
-      const response = await fetch("/api/order/" + _id, {
+      const response = await fetch("/api/order/" + id, {
         method: "PUT",
         body: status,
       });
       const updatedOrder = await response.json();
 
       if (updatedOrder.status == "approved") {
-        toast.success("Pedido aprovado!");
+        Toaster.success("Pedido aprovado!");
       } else {
-        toast.warning("Pedido Reprovado!");
+        Toaster.warning("Pedido Reprovado!");
       }
 
       refresh((prev) => prev + 1);
     } catch (err) {
-      toast.error(toast.INTERNET_ERROR_MESSAGE);
+      Toaster.danger("Erro: Verifique sua conexão de internet");
     }
   }
 
@@ -98,7 +99,7 @@ export function PendingOrder({ order, refresh, toast }) {
                   Cancelar
                 </Button>
                 <Button
-                  onClick={() => handleClick("reproved")}
+                  onClick={() => handleClick("rejected")}
                   intent={"danger"}
                   className={Classes.POPOVER_DISMISS}
                 >

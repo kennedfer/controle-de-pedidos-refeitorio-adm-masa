@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 
-export function useOrders(status, period) {
+export function useOrders(status, period, refresh) {
   const [orders, setOrders] = useState([]);
 
   const memoizedStatus = useMemo(() => status, [status]);
@@ -24,7 +24,7 @@ export function useOrders(status, period) {
     }
 
     fetchApiData();
-  }, [memoizedStatus, memoizedPeriod]);
+  }, [memoizedStatus, memoizedPeriod, refresh]);
 
   return orders;
 }

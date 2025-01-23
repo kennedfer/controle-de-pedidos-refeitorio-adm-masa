@@ -1,11 +1,8 @@
 import { PendingOrder } from "./PendingOrder";
-// import { useToast } from "../hooks/Toast.js";
 
 export function PendingTable({ orders, refresh }) {
-  // const [Toast, contextHolder] = useToast();
-
   return (
-    <table rules="all" className=" w-full table-auto text-xs">
+    <table className=" w-full table-auto text-xs">
       <thead className="border-b rounded-lg bg-[#fafafa] rounded-xl">
         <tr>
           <th scope="col">Registrado Por</th>

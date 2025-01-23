@@ -14,7 +14,7 @@ export default function Layout({ children }) {
         <title>Gestão de Pedidos Alibras - MASA</title>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="flex">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

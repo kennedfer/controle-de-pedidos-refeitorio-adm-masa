@@ -8,12 +8,13 @@ import { ApprovedPanel } from "../components/ApprovedPanel";
 // import { motion } from "framer-motion";
 import { calculateCurrentPeriod } from "../utils/period";
 import { LoginDialog } from "../components/LoginDialog";
+import { Header } from "../components/Header";
 // import { OrderDialog } from "../components/OrderDialog";
 
 function Home() {
   const currentPeriod = calculateCurrentPeriod();
   const [period, setPeriod] = useState(currentPeriod);
-  const [loginOpen, setLoginOpen] = useState(true);
+  const [loginOpen, setLoginOpen] = useState(false);
 
   const panels = useMemo(
     () => ({
@@ -68,10 +69,13 @@ function Home() {
 
   return (
     <>
-      <Sidebar panelState={panelState} />
-      <div className="w-full max-h-screen overflow-auto transition-all">
-        {panels[currentPanel]}
-      </div>
+      <Header />
+      <main className="flex">
+        <Sidebar panelState={panelState} />
+        <div className="w-full max-h-screen overflow-auto transition-all">
+          {panels[currentPanel]}
+        </div>
+      </main>
       <LoginDialog isOpen={loginOpen} onSubmit={handleLogin} />
     </>
   );

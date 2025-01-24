@@ -1,6 +1,6 @@
 import { PendingOrder } from "./PendingOrder";
 
-export function PendingTable({ orders, refresh }) {
+export function PendingTable({ orders, refresh, changeOrderStatus }) {
   return (
     <table className=" w-full table-auto text-xs">
       <thead className="border-b rounded-lg bg-[#fafafa] rounded-xl">
@@ -18,7 +18,12 @@ export function PendingTable({ orders, refresh }) {
       </thead>
       <tbody>
         {orders.map((order) => (
-          <PendingOrder refresh={refresh} key={order.id} order={order} />
+          <PendingOrder
+            refresh={refresh}
+            key={order.id}
+            order={order}
+            changeOrderStatus={changeOrderStatus}
+          />
         ))}
       </tbody>
     </table>

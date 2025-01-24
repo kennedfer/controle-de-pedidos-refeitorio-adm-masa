@@ -1,8 +1,7 @@
 import { Button, Classes, Popover } from "@blueprintjs/core";
 import { useState } from "react";
-import { Toaster } from "../hooks/toast";
 
-export function PendingOrder({ order, refresh }) {
+export function PendingOrder({ order, changeOrderStatus, refresh }) {
   const {
     owner,
     type,
@@ -25,31 +24,6 @@ export function PendingOrder({ order, refresh }) {
     style: "currency",
     currency: "BRL",
   });
-
-  async function handleClick(status) {
-    const newIsLoading = isLoading;
-    newIsLoading[status] = true;
-
-    setIsLoading(newIsLoading);
-
-    try {
-      const response = await fetch("/api/order/" + id, {
-        method: "PUT",
-        body: status,
-      });
-      const updatedOrder = await response.json();
-
-      if (updatedOrder.status == "approved") {
-        Toaster.success("Pedido aprovado!");
-      } else {
-        Toaster.warning("Pedido Reprovado!");
-      }
-
-      refresh((prev) => prev + 1);
-    } catch (err) {
-      Toaster.danger("Erro: Verifique sua conexão de internet");
-    }
-  }
 
   return (
     <tr className="text-center border-b hover:bg-[#fafafa] duration-300 transition">
@@ -99,7 +73,7 @@ export function PendingOrder({ order, refresh }) {
                   Cancelar
                 </Button>
                 <Button
-                  onClick={() => handleClick("rejected")}
+                  onClick={() => changeOrderStatus(id, "rejected", refresh)}
                   intent={"danger"}
                   className={Classes.POPOVER_DISMISS}
                 >
@@ -123,7 +97,7 @@ export function PendingOrder({ order, refresh }) {
         <Button
           small
           className="ml-2"
-          onClick={() => handleClick("approved")}
+          onClick={() => changeOrderStatus(id, "approved", refresh)}
           loading={isLoading.approved}
           intent="success"
           icon="tick"

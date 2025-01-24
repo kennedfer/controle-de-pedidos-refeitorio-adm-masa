@@ -3,11 +3,10 @@ import { PendingTable } from "./PendingTable";
 import { useOrders } from "../hooks/orders";
 import { Toaster } from "../hooks/toast";
 
+//! TODO: mover para um 'utils'
 const changeOrderStatus = async (orderId, status, refresh) => {
   try {
     console.log(orderId);
-    refresh((prev) => prev + 1);
-    return;
     const response = await fetch("/api/order/" + orderId, {
       method: "PUT",
       body: status,

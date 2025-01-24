@@ -11,6 +11,11 @@ import { LoginDialog } from "../components/LoginDialog";
 import { Header } from "../components/Header";
 // import { OrderDialog } from "../components/OrderDialog";
 
+function userNotLogged() {
+  const token = sessionStorage.getItem("cadastro-alibras-token");
+  return !Boolean(token);
+}
+
 function Home() {
   const currentPeriod = calculateCurrentPeriod();
   const [period, setPeriod] = useState(currentPeriod);
@@ -43,7 +48,7 @@ function Home() {
   }
 
   useEffect(() => {
-    if (currentPanel == "pending") setLoginOpen(true);
+    if (currentPanel == "pending" && userNotLogged()) setLoginOpen(true);
   }, [currentPanel]);
 
   return (

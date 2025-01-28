@@ -1,217 +1,230 @@
 import { handleError } from "../utils/error";
 
 /**
- * Serviço para gerenciar pedidos no banco de dados.
+ * Enum para status válidos de pedidos
+ * @readonly
+ * @enum {string}
+ */
+export const OrderStatus = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected",
+};
+
+/**
+ * Classe de serviço para gerenciar pedidos no banco de dados.
  */
 class OrderService {
+  /** @type {Object} Schema de validação para pedidos */
+  static ORDER_SCHEMA = {
+    owner: (value) => typeof value === "string" && value.length > 0,
+    type: (value) => typeof value === "string" && value.length > 0,
+    quantity: (value) => typeof value === "number" && value > 0,
+    costCenter: (value) => typeof value === "string" && value.length > 0,
+    price: (value) => typeof value === "number" && value >= 0,
+    targetDate: (value) => value instanceof Date || !isNaN(Date.parse(value)),
+    targetPlace: (value) => typeof value === "string" && value.length > 0,
+  };
+
   /**
-   * Cria uma instância do OrderService.
-   * @param {Object} pool - O pool de conexões com o banco de dados.
+   * @param {Object} pool - Pool de conexões com o banco de dados
    */
   constructor(pool) {
+    if (!pool) throw new Error("Pool de conexão é obrigatório");
     this.pool = pool;
   }
 
   /**
-   * Formata os valores do pedido para inserção no banco de dados.
+   * Executa uma query com tratamento de conexão e transação
    * @private
-   * @param {Object} order - Objeto contendo os dados do pedido.
-   * @param {string} order.owner - Proprietário do pedido.
-   * @param {string} order.type - Tipo do pedido.
-   * @param {number} order.quantity - Quantidade do pedido.
-   * @param {string} order.costCenter - Centro de custo associado ao pedido.
-   * @param {string} [order.comments=""] - Comentários adicionais do pedido.
-   * @param {number} order.price - Preço do pedido.
-   * @param {string} [order.status="pending"] - Status do pedido, pode ser "pending", "approved" ou "rejected".
-   * @param {string} order.targetDate - Data alvo para o pedido.
-   * @param {string} order.targetPlace - Local alvo para o pedido.
-   * @returns {Array} Um array contendo os valores do pedido para inserção na tabela `Orders`.
-   */
-  #getOrderValues(order) {
-    const targetDate = order.targetDate.replace("T", " ").replace("Z", "");
-
-    return [
-      order.owner,
-      order.type,
-      order.quantity,
-      order.costCenter,
-      order.comments || "",
-      order.price,
-      order.status || "pending",
-      targetDate,
-      order.targetPlace,
-    ];
-  }
-
-  /**
-   * Retorna todos os registros de pedidos dentro de um intervalo de datas e status específicos.
-   *
-   * Este método permite filtrar os pedidos pela coluna `status` e por um intervalo de datas (`targetDate`),
-   * retornando apenas os pedidos que atendem a esses critérios.
-   *
    * @async
-   * @param {string} orderStatus - O status dos pedidos a serem buscados. Pode ser "pending", "approved" ou "rejected".
-   * @param {string} startPeriod - A data de início do intervalo de tempo (inclusiva). Formato: 'YYYY-MM-DD'.
-   * @param {string} endPeriod - A data final do intervalo de tempo (exclusiva). Formato: 'YYYY-MM-DD'.
-   * @returns {Promise<Array>} Retorna uma lista de pedidos que atendem aos critérios de filtro.
-   * @throws {Error} Lança um erro caso falhe ao buscar os pedidos ou realizar a consulta.
+   * @param {Function} operation - Função que executa a operação no banco
+   * @param {string} context - Contexto da operação para log de erro
+   * @returns {Promise<*>}
    */
-  async index(startPeriod, endPeriod, orderStatus) {
-    let connection;
-
-    try {
-      connection = await this.pool.getConnection();
-      const values = [orderStatus, startPeriod, endPeriod];
-
-      const [results, _] = await connection.query(
-        `
-        SELECT * FROM orders
-        WHERE status = ?
-          AND createdAt > FROM_UNIXTIME(? / 1000)
-          AND createdAt < FROM_UNIXTIME(? / 1000);`,
-        values,
-      );
-
-      return results;
-    } catch (error) {
-      handleError(error, "busca de pedidos");
-    } finally {
-      if (connection) connection.release();
-    }
-  }
-
-  /**
-   * Retorna um pedido específico pelo seu ID.
-   * @async
-   * @param {number} id - O ID do pedido.
-   * @returns {Promise<Object>} O pedido com o ID especificado.
-   * @throws {Error} Lança um erro caso falhe ao buscar o pedido.
-   */
-  async show(id) {
-    let connection;
-
-    try {
-      connection = await this.pool.getConnection();
-
-      const [results, _] = await connection.query(
-        "SELECT * FROM Orders WHERE id=?",
-        [id],
-      );
-      return results;
-    } catch (error) {
-      handleError(error, "busca de pedido único");
-    } finally {
-      if (connection) connection.release();
-    }
-  }
-
-  /**
-   * Cria um novo pedido no banco de dados.
-   * @async
-   * @param {Object} order - Objeto contendo os dados do pedido a ser inserido.
-   * @param {string} order.owner - Proprietário do pedido.
-   * @param {string} order.type - Tipo do pedido.
-   * @param {number} order.quantity - Quantidade do pedido.
-   * @param {string} order.costCenter - Centro de custo associado ao pedido.
-   * @param {string} [order.comments=""] - Comentários adicionais do pedido.
-   * @param {number} order.price - Preço do pedido.
-   * @param {string} [order.status="pending"] - Status do pedido.
-   * @param {string} order.targetDate - Data alvo para o pedido.
-   * @param {string} order.targetPlace - Local alvo para o pedido.
-   * @returns {Promise<Object>} Objeto indicando que a operação foi bem-sucedida. Ex: `{ ok: true }`
-   * @throws {Error} Lança um erro caso falhe ao criar o pedido ou realizar a transação.
-   */
-  async store(order) {
-    let connection;
-
-    try {
-      connection = await this.pool.getConnection();
-      await connection.beginTransaction();
-
-      const query = `
-        INSERT INTO Orders (owner, type, quantity, costCenter, comments, price, status, targetDate, targetPlace)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `;
-
-      const values = this.#getOrderValues(order);
-
-      await connection.execute(query, values);
-      await connection.commit();
-
-      return {
-        ok: true,
-      };
-    } catch (error) {
-      if (connection) await connection.rollback();
-
-      handleError(error, "criação de pedido");
-    } finally {
-      if (connection) connection.release();
-    }
-  }
-
-  /**
-   * Atualiza o status de um pedido específico.
-   * @async
-   * @param {number} id - O ID do pedido a ser atualizado.
-   * @param {string} status - O novo status do pedido, pode ser "pending", "approved" ou "rejected".
-   * @returns {Promise<Object>} Objeto indicando que a operação foi bem-sucedida. Ex: `{ ok: true }`
-   * @throws {Error} Lança um erro caso falhe ao atualizar o status do pedido ou realizar a transação.
-   */
-  async update(id, status) {
+  async #executeQuery(operation, context) {
     let connection;
     try {
       connection = await this.pool.getConnection();
       await connection.beginTransaction();
 
-      const query = `
-        UPDATE Orders SET status=? WHERE id=?
-      `;
-
-      await connection.execute(query, [status, id]);
+      const result = await operation(connection);
       await connection.commit();
 
-      return {
-        ok: true,
-        status,
-      };
+      return result;
     } catch (error) {
       if (connection) await connection.rollback();
-
-      handleError(error, "atualização de pedido");
-    } finally {
-      if (connection) connection.release();
-    }
-  }
-
-  /**
-   * Exclui um pedido específico do banco de dados.
-   * @async
-   * @param {number} id - O ID do pedido a ser excluído.
-   * @returns {Promise<Object>} Objeto indicando que a operação foi bem-sucedida. Ex: `{ ok: true }`
-   * @throws {Error} Lança um erro caso falhe ao excluir o pedido ou realizar a transação.
-   */
-  async delete(id) {
-    let connection;
-
-    try {
-      connection = this.pool.getConnection();
-      await connection.beginTransaction();
-
-      const query = "DELETE FROM Orders WHERE id=?";
-      await connection.execute(query, [id]);
-
-      await connection.commit();
-
-      return { ok: true };
-    } catch (error) {
-      if (connection) await connection.rollback();
-
-      console.error("Erro ao excluir pedido:", error);
-      throw error;
+      handleError(error, context);
     } finally {
       if (connection) await connection.release();
     }
+  }
+
+  /**
+   * Valida os dados do pedido
+   * @private
+   * @param {Object} order - Dados do pedido
+   * @throws {Error} Se os dados forem inválidos
+   */
+  #validateOrder(order) {
+    for (const [field, validator] of Object.entries(
+      OrderService.ORDER_SCHEMA,
+    )) {
+      if (!validator(order[field])) {
+        throw new Error(`Campo inválido: ${field}`);
+      }
+    }
+  }
+
+  /**
+   * Formata data para o formato do banco
+   * @private
+   * @param {string|Date} date
+   * @returns {string}
+   */
+  #formatDate(date) {
+    return new Date(date).toISOString().slice(0, 19).replace("T", " ");
+  }
+
+  /**
+   * Busca pedidos por período e status
+   * @async
+   * @param {string} startPeriod - Data inicial (YYYY-MM-DD)
+   * @param {string} endPeriod - Data final (YYYY-MM-DD)
+   * @param {OrderStatus} orderStatus - Status dos pedidos
+   * @returns {Promise<Array>}
+   */
+  async index(startPeriod, endPeriod, orderStatus) {
+    if (!Object.values(OrderStatus).includes(orderStatus)) {
+      throw new Error("Status inválido");
+    }
+
+    return this.#executeQuery(async (connection) => {
+      const query = `
+                SELECT * FROM Orders 
+                WHERE status = ? 
+                AND targetDate BETWEEN ? AND ?
+                ORDER BY targetDate DESC
+            `;
+
+      const [results] = await connection.query(query, [
+        orderStatus,
+        this.#formatDate(startPeriod),
+        this.#formatDate(endPeriod),
+      ]);
+
+      return results;
+    }, "busca de pedidos");
+  }
+
+  /**
+   * Busca um pedido por ID
+   * @async
+   * @param {number} id
+   * @returns {Promise<Object>}
+   */
+  async show(id) {
+    if (!Number.isInteger(id) || id <= 0) {
+      throw new Error("ID inválido");
+    }
+
+    return this.#executeQuery(async (connection) => {
+      const [results] = await connection.query(
+        "SELECT * FROM Orders WHERE id = ?",
+        [id],
+      );
+
+      if (!results.length) {
+        throw new Error(`Pedido ${id} não encontrado`);
+      }
+
+      return results[0];
+    }, "busca de pedido único");
+  }
+
+  /**
+   * Cria um novo pedido
+   * @async
+   * @param {Object} order - Dados do pedido
+   * @returns {Promise<Object>}
+   */
+  async store(order) {
+    this.#validateOrder(order);
+
+    return this.#executeQuery(async (connection) => {
+      const query = `
+                INSERT INTO Orders (
+                    owner, type, quantity, costCenter, 
+                    comments, price, status, targetDate, targetPlace
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
+
+      const values = [
+        order.owner,
+        order.type,
+        order.quantity,
+        order.costCenter,
+        order.comments || "",
+        order.price,
+        order.status || OrderStatus.PENDING,
+        this.#formatDate(order.targetDate),
+        order.targetPlace,
+      ];
+
+      const [result] = await connection.execute(query, values);
+      return { ok: true, id: result.insertId };
+    }, "criação de pedido");
+  }
+
+  /**
+   * Atualiza o status de um pedido
+   * @async
+   * @param {number} id
+   * @param {OrderStatus} status
+   * @returns {Promise<Object>}
+   */
+  async update(id, status) {
+    if (!Object.values(OrderStatus).includes(status)) {
+      throw new Error("Status inválido");
+    }
+
+    return this.#executeQuery(async (connection) => {
+      const [result] = await connection.execute(
+        "UPDATE Orders SET status = ? WHERE id = ?",
+        [status, id],
+      );
+
+      if (result.affectedRows === 0) {
+        throw new Error(`Pedido ${id} não encontrado`);
+      }
+
+      return { ok: true, status };
+    }, "atualização de pedido");
+  }
+
+  /**
+   * Remove um pedido
+   * @async
+   * @param {number} id
+   * @returns {Promise<Object>}
+   */
+  async delete(id) {
+    if (!Number.isInteger(id) || id <= 0) {
+      throw new Error("ID inválido");
+    }
+
+    return this.#executeQuery(async (connection) => {
+      const [result] = await connection.execute(
+        "DELETE FROM Orders WHERE id = ?",
+        [id],
+      );
+
+      if (result.affectedRows === 0) {
+        throw new Error(`Pedido ${id} não encontrado`);
+      }
+
+      return { ok: true };
+    }, "exclusão de pedido");
   }
 }
 

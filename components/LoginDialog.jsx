@@ -8,9 +8,10 @@ import {
   Tooltip,
 } from "@blueprintjs/core";
 import { useState } from "react";
-import { Toaster } from "../hooks/toast";
+import { Toaster } from "../utils/toast";
+import { EquinoxLogo } from "./Header";
 
-export function LoginDialog({ onSubmit, isOpen }) {
+export function LoginDialog({ onSubmit, isOpen, onClose }) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +45,7 @@ export function LoginDialog({ onSubmit, isOpen }) {
   };
 
   return (
-    <Dialog isOpen={isOpen} title="Entrar no sistema">
+    <Dialog onClose={onClose} isOpen={isOpen} title="Entrar no sistema">
       <Card className="flex gap-4">
         <form onSubmit={handleSubmit}>
           <FormGroup
@@ -76,7 +77,9 @@ export function LoginDialog({ onSubmit, isOpen }) {
           />
         </form>
         <Divider />
-        <div>IMAGE</div>
+        <div className="grid place-items-center flex-grow">
+          <EquinoxLogo />
+        </div>
       </Card>
     </Dialog>
   );

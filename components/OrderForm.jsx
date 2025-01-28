@@ -1,18 +1,23 @@
 import React from "react";
-
 import {
   FormGroup,
   InputGroup,
   Button,
   NumericInput,
   TextArea,
-  HTMLSelect,
   Divider,
   MenuItem,
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
-import { DateInput3, DatePicker3 } from "@blueprintjs/datetime2";
+import { DatePicker3 } from "@blueprintjs/datetime2";
 import { ptBR } from "date-fns/locale";
+
+import {
+  costCenterOptions,
+  filterSelectOption,
+  mealTypeOptions,
+  renderSelectOption,
+} from "../utils/selects.values";
 
 const defaultFormData = {
   owner: "",
@@ -21,35 +26,11 @@ const defaultFormData = {
   costCenter: "",
   comments: "",
   targetPlace: "",
+  targetDate: null,
 };
 
-// Exemplo de opção para o Select
-const typeOptions = [
-  { value: "APRESENTACAO MUSICAL", label: "APRESENTAÇÃO MUSICAL" },
-  { value: "CAFE LITRO", label: "CAFÉ LITRO" },
-  // Adicione outras opções aqui...
-];
-
-const costCenterOptions = [
-  { value: "102062-BOMBEAMENTO", label: "102062 - BOMBEAMENTO" },
-  {
-    value: "102101-GEOLOGIA OPERACIONAL",
-    label: "102101 - GEOLOGIA OPERACIONAL",
-  },
-  // Adicione outras opções aqui...
-];
-
-// Custom render para opções
-const renderOption = (option, { handleClick }) => (
-  <MenuItem text={option.label} key={option.value} onClick={handleClick} />
-);
-
-export const OrderForm = ({ form, onSubmit }) => {
+export const OrderForm = ({ onSubmit }) => {
   const [formData, setFormData] = React.useState(defaultFormData);
-
-  const handleCostCenterChange = (item) => {
-    console.log("Centro de custo selecionado:", item.value);
-  };
 
   const handleInputChange = (name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -59,10 +40,11 @@ export const OrderForm = ({ form, onSubmit }) => {
     event.preventDefault();
     onSubmit(formData);
   };
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-nowrap gap-3">
-      {/* Registrado Por */}
-      <div className="flex flex-col w-full">
+    <form onSubmit={handleSubmit} className="flex gap-3 flex-nowrap w-full">
+      <div className="flex flex-col flex-grow">
+        {/* Registrado Por */}
         <FormGroup
           label="Registrado Por"
           labelFor="owner"
@@ -72,50 +54,32 @@ export const OrderForm = ({ form, onSubmit }) => {
             id="owner"
             required
             placeholder="Ex.: Kenned Ferreira"
-            value={formData.owner || ""}
+            value={formData.owner}
             onChange={(e) => handleInputChange("owner", e.target.value)}
           />
         </FormGroup>
 
-        {/* Tipo de Pedido e Quantidade */}
-        {/* <div className="grid grid-cols-3 gap-1 w-full"> */}
+        {/* Tipo de Pedido */}
         <FormGroup
           label="Tipo de Pedido"
           labelFor="type"
           labelInfo="(obrigatório)"
-          className="col-span-2"
         >
-          {/* <HTMLSelect
-            id="type"
-            fill
-            options={[
-              { value: "APRESENTACAO MUSICAL", label: "APRESENTAÇÃO MUSICAL" },
-              { value: "CAFE LITRO", label: "CAFÉ LITRO" },
-              { value: "CERVEJA", label: "CERVEJA" },
-              { value: "CHURRASCO", label: "CHURRASCO" },
-              { value: "COFF I", label: "COFF I" },
-              { value: "COFF II", label: "COFF II" },
-              { value: "COFF III", label: "COFF III" },
-              { value: "DESJEJUM", label: "DESJEJUM" },
-              { value: "DESJEJUM ACAMPAMENTO", label: "DESJEJUM ACAMPAMENTO" },
-              { value: "EVENTO", label: "EVENTO" },
-              { value: "LANCHE ESPECIAL", label: "LANCHE ESPECIAL" },
-              { value: "LANCHE TURNO", label: "LANCHE TURNO" },
-              { value: "PICOLE", label: "PICOLE" },
-              { value: "ALMOCO", label: "ALMOÇO" },
-              { value: "JANTAR", label: "JANTAR" },
-            ]}
-            value={formData.type || ""}
-            onChange={(e) => handleInputChange("type", e.target.value)}
-          /> */}
-
           <Select
             fill
-            items={typeOptions}
-            itemRenderer={renderOption}
+            items={mealTypeOptions}
+            itemRenderer={renderSelectOption}
             onItemSelect={(e) => handleInputChange("type", e.value)}
             filterable
+            itemPredicate={filterSelectOption}
             popoverProps={{ minimal: true }}
+            noResults={
+              <MenuItem
+                disabled={true}
+                text="Sem resultados."
+                roleStructure="listoption"
+              />
+            }
           >
             <Button
               fill
@@ -126,6 +90,7 @@ export const OrderForm = ({ form, onSubmit }) => {
           </Select>
         </FormGroup>
 
+        {/* Quantidade */}
         <FormGroup
           label="Quantidade"
           labelFor="quantity"
@@ -137,11 +102,10 @@ export const OrderForm = ({ form, onSubmit }) => {
             min={1}
             max={100}
             fill
-            value={formData.quantity || ""}
+            value={formData.quantity}
             onValueChange={(value) => handleInputChange("quantity", value)}
           />
         </FormGroup>
-        {/* </div> */}
 
         {/* Centro de Custo */}
         <FormGroup
@@ -152,10 +116,18 @@ export const OrderForm = ({ form, onSubmit }) => {
           <Select
             fill
             items={costCenterOptions}
-            itemRenderer={renderOption}
+            itemRenderer={renderSelectOption}
+            itemPredicate={filterSelectOption}
             onItemSelect={(e) => handleInputChange("costCenter", e.value)}
             filterable
             popoverProps={{ minimal: true }}
+            noResults={
+              <MenuItem
+                disabled={true}
+                text="Sem resultados."
+                roleStructure="listoption"
+              />
+            }
           >
             <Button
               fill
@@ -169,18 +141,17 @@ export const OrderForm = ({ form, onSubmit }) => {
         {/* Comentários */}
         <FormGroup label="Comentários" labelFor="comments">
           <TextArea
-            className="!w-full"
+            className="w-full"
             id="comments"
             placeholder="Ex.: Enviar limões para o churrasco"
-            value={formData.comments || ""}
+            value={formData.comments}
             onChange={(e) => handleInputChange("comments", e.target.value)}
           />
         </FormGroup>
-
-        {/* Data da Entrega */}
       </div>
       <Divider />
-      <div className="flex flex-col w-full">
+      <div className="flex-grow">
+        {/* Data da Entrega */}
         <FormGroup
           label="Data da Entrega"
           labelFor="targetDate"
@@ -193,7 +164,7 @@ export const OrderForm = ({ form, onSubmit }) => {
             parseDate={(str) => new Date(str)}
             locale={ptBR}
             placeholder="Selecione uma data"
-            value={formData.targetDate || null}
+            value={formData.targetDate}
             onChange={(date) => handleInputChange("targetDate", date)}
           />
         </FormGroup>
@@ -207,7 +178,7 @@ export const OrderForm = ({ form, onSubmit }) => {
           <InputGroup
             id="targetPlace"
             placeholder="Ex.: Sala de Reunião TATAJUBA"
-            value={formData.targetPlace || ""}
+            value={formData.targetPlace}
             onChange={(e) => handleInputChange("targetPlace", e.target.value)}
           />
         </FormGroup>

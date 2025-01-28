@@ -1,7 +1,8 @@
 import { Button, Classes, Popover } from "@blueprintjs/core";
 import { useState } from "react";
+import { changeOrderStatus } from "../utils/order";
 
-export function PendingOrder({ order, changeOrderStatus, refresh }) {
+export function PendingOrder({ order, refresh }) {
   const {
     owner,
     type,
@@ -25,6 +26,19 @@ export function PendingOrder({ order, changeOrderStatus, refresh }) {
     currency: "BRL",
   });
 
+  // Funções de manipulação
+  const handleApprove = async () => {
+    setIsLoading((prev) => ({ ...prev, approved: true }));
+    await changeOrderStatus(id, "approved", refresh);
+    setIsLoading((prev) => ({ ...prev, approved: false }));
+  };
+
+  const handleReject = async () => {
+    setIsLoading((prev) => ({ ...prev, rejected: true }));
+    await changeOrderStatus(id, "rejected", refresh);
+    setIsLoading((prev) => ({ ...prev, rejected: false }));
+  };
+
   return (
     <tr className="text-center border-b hover:bg-[#fafafa] duration-300 transition">
       <th scope="row">{owner}</th>
@@ -37,16 +51,9 @@ export function PendingOrder({ order, changeOrderStatus, refresh }) {
           popoverClassName={Classes.POPOVER_CONTENT_SIZING}
           placement="bottom"
           content={<span>{comments || "Pedido sem comentários"}</span>}
-          renderTarget={({ isOpen, ...targetProps }) => (
-            <Button
-              {...targetProps}
-              intent="primary"
-              minimal
-              text="Comentários"
-              small
-            />
-          )}
-        />
+        >
+          <Button intent="primary" minimal text="Comentários" small />
+        </Popover>
       </td>
       <td>{formattedCreatedAt}</td>
       <td>{targetDate}</td>
@@ -57,53 +64,41 @@ export function PendingOrder({ order, changeOrderStatus, refresh }) {
           popoverClassName={Classes.POPOVER_CONTENT_SIZING}
           placement="bottom"
           content={
-            <div key="text">
+            <div className="flex flex-col items-end mt-3">
               <p>Tem certeza que quer reprovar o pedido?</p>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  marginTop: 15,
-                }}
-              >
+              <div className="flex mt-3">
                 <Button
                   className={Classes.POPOVER_DISMISS}
                   style={{ marginRight: 10 }}
-                >
-                  Cancelar
-                </Button>
+                  text="Cancelar"
+                />
                 <Button
-                  onClick={() => changeOrderStatus(id, "rejected", refresh)}
-                  intent={"danger"}
+                  onClick={handleReject}
+                  intent="danger"
                   className={Classes.POPOVER_DISMISS}
-                >
-                  Reprovar
-                </Button>
+                  text="Reprovar"
+                />
               </div>
             </div>
           }
-          renderTarget={({ isOpen, ...targetProps }) => (
-            <Button
-              small
-              {...targetProps}
-              icon="trash"
-              loading={isLoading.rejected}
-              intent="danger"
-            >
-              REPROVAR
-            </Button>
-          )}
-        />
+        >
+          <Button
+            small
+            icon="trash"
+            loading={isLoading.rejected}
+            intent="danger"
+            text="REPROVAR"
+          />
+        </Popover>
         <Button
           small
           className="ml-2"
-          onClick={() => changeOrderStatus(id, "approved", refresh)}
+          onClick={handleApprove}
           loading={isLoading.approved}
           intent="success"
           icon="tick"
-        >
-          APROVAR
-        </Button>
+          text="APROVAR"
+        />
       </td>
     </tr>
   );

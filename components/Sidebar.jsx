@@ -1,67 +1,36 @@
-import {
-  Card,
-  Divider,
-  Tab,
-  Tabs,
-  Button,
-  TabsExpander,
-} from "@blueprintjs/core";
+import { Tab, Tabs, Button } from "@blueprintjs/core";
 import { useState } from "react";
 import { OrderDialog } from "./OrderDialog";
 
-export function Sidebar({ panelState }) {
-  const [selectedPanel, setSelectedPanel] = panelState;
-  const [dialogState, setDialogState] = useState({
-    open: false,
-  });
+export function Sidebar({ selectedPanel, setSelectedPanel, refresh }) {
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
   return (
-    <>
-      <Card compact className="h-screen w-1/6 flex flex-col gap-0">
-        <h4
-          style={{
-            margin: "0 !important",
-          }}
-          className="bp5-heading"
-        >
-          Pedidos
-        </h4>
-        <Divider />
-        <Tabs
-          className="w-full flex-grow flex flex-col"
-          fill={true}
-          id="TabsExample"
-          vertical
-          onChange={(e) => {
-            setSelectedPanel(e);
-          }}
-        >
-          <Tab
-            tagContent={1}
-            icon="warning-sign"
-            id="pending"
-            title="Pendentes"
-          />
-
-          <Tab icon="tick" id="approved" title="Aprovados" />
-          <TabsExpander />
-        </Tabs>
-        <OrderDialog dialogState={[dialogState, setDialogState]} />
-        <Button
-          fill
-          intent="primary"
-          style={{
-            marginTop: "auto",
-          }}
-          onClick={() =>
-            setDialogState({
-              open: true,
-            })
-          }
-        >
-          Novo Pedido
-        </Button>
-      </Card>
-    </>
+    <div className="w-1/6 flex flex-col gap-0 border p-2">
+      <Tabs
+        className="w-full flex-grow flex flex-col"
+        fill={true}
+        id="status-tabs"
+        selectedTabId={selectedPanel}
+        vertical
+        onChange={(activeTab) => setSelectedPanel(activeTab)}
+      >
+        <Tab icon="warning-sign" id="pending" title="Pendentes" />
+        <Tab icon="tick" id="approved" title="Aprovados" />
+      </Tabs>
+      <OrderDialog
+        isOpen={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
+        refresh={refresh}
+      />
+      <Button
+        fill
+        intent="primary"
+        className="mt-auto"
+        onClick={() => setDialogOpen(true)}
+      >
+        Novo Pedido
+      </Button>
+    </div>
   );
 }

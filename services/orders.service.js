@@ -67,8 +67,8 @@ class OrderService {
         `
         SELECT * FROM orders
         WHERE status = ?
-          AND targetDate > FROM_UNIXTIME(? / 1000)
-          AND targetDate < FROM_UNIXTIME(? / 1000);`,
+          AND createdAt > FROM_UNIXTIME(? / 1000)
+          AND createdAt < FROM_UNIXTIME(? / 1000);`,
         values,
       );
 

@@ -1,15 +1,9 @@
-import {
-  Card,
-  Dialog,
-  DialogBody,
-  DialogFooter,
-  Button,
-} from "@blueprintjs/core";
+import { Dialog, DialogBody } from "@blueprintjs/core";
 import { OrderForm } from "./OrderForm";
-import { Toaster } from "../hooks/toast";
+import { Toaster } from "../utils/toast";
 import { handleError } from "../utils/error";
 
-export const OrderDialog = ({ dialogState }) => {
+export const OrderDialog = ({ onClose, isOpen, refresh }) => {
   async function handleSubmit(values) {
     try {
       const response = await fetch("/api/order", {
@@ -17,9 +11,10 @@ export const OrderDialog = ({ dialogState }) => {
         body: JSON.stringify(values),
       });
 
-      const data = await response.json();
+      await response.json();
       Toaster.success("Pedido realizado com sucesso!");
       closeDialog();
+      refresh((prev) => prev + 1);
       // form.resetFields();
     } catch (error) {
       Toaster.danger("Erro: Verifique sua conexão de internet");
@@ -28,13 +23,13 @@ export const OrderDialog = ({ dialogState }) => {
   }
 
   function closeDialog() {
-    dialogState[1]({ open: false });
+    onClose();
   }
 
   return (
     <Dialog
       title="Novo Pedido"
-      isOpen={dialogState[0].open}
+      isOpen={isOpen}
       style={{
         width: "850px",
       }}

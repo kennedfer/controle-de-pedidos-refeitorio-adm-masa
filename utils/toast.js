@@ -1,5 +1,20 @@
 import { OverlayToaster, Position } from "@blueprintjs/core";
 
+const TOAST_CONFIG = {
+    success: {
+        intent: "success",
+        icon: "tick",
+    },
+    danger: {
+        intent: "danger",
+        icon: "error",
+    },
+    warning: {
+        intent: "warning",
+        icon: "high-priority",
+    }
+}
+
 /**
  * Classe responsável pela criação e exibição de toasts (notificações) usando o OverlayToaster do BlueprintJS.
  * O toaster é inicializado de forma assíncrona ao criar uma instância da classe.
@@ -19,6 +34,14 @@ class ToastCreator {
         })();
     }
 
+    #show(message, type){
+        this.toaster.show(
+            {message,
+            isCloseButtonShown: false,
+             ...TOAST_CONFIG[type]
+        })
+    }
+
     /**
      * Exibe um toast de sucesso.
      *
@@ -29,10 +52,7 @@ class ToastCreator {
      * toaster.success('Operação concluída com sucesso!');
      */
     success(message) {
-        this.toaster.show({
-            message,
-            intent: "success",
-        });
+        this.#show(message, "success");
     }
 
     /**
@@ -45,10 +65,7 @@ class ToastCreator {
      * toaster.warning('Aviso: Item removido.');
      */
     warning(message) {
-        this.toaster.show({
-            message,
-            intent: "warning",
-        });
+        this.#show(message, "warning");
     }
 
     /**
@@ -61,10 +78,7 @@ class ToastCreator {
      * toaster.danger('Erro: Algo deu errado!');
      */
     danger(message) {
-        this.toaster.show({
-            message,
-            intent: "danger",
-        });
+        this.#show(message, "danger");
     }
 }
 

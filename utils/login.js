@@ -11,7 +11,10 @@ import { handleError } from "./error";
  */
 export async function tryLogin(password, loginResultCallback) {
   try {
-    const res = await fetch(`/api/auth/login?password=${password}`);
+    const res = await fetch("/api/auth/login",{
+      method: "POST",
+      body: password
+    });
 
     if (!res.ok) {
       throw new Error(`Erro ao tentar login: ${res.statusText}`);

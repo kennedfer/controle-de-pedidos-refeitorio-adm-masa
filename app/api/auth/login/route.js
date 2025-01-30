@@ -1,10 +1,13 @@
-export async function GET(request) {
-    const searchParams = request.nextUrl.searchParams
-
-    const password = process.env.PASSWORD;
-    const userPassword = searchParams.get('password') || "";
-
-    return Response.json({
-        ok: password == userPassword
-    })
+export async function POST(request) {
+    try{
+        const userPassword = await request.text();
+        const serverPassword = process.env.RESTAURANT_ORDERS_USER_PASSWORD;
+    
+        return Response.json({
+            ok: serverPassword == userPassword
+        })
+    }catch(err){
+        console.log(err)
+    }
+    
 }

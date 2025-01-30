@@ -28,7 +28,6 @@ function Home() {
   const currentPanel = useMemo(() => selectedPanel, [selectedPanel]);
 
   useEffect(() => {
-    console.log("seteu o panel: " + period.start);
     if (currentPanel == "pending" && userNotLogged()) setLoginOpen(true);
   }, [currentPanel]);
 

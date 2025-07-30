@@ -62,6 +62,6 @@ npm run build   # Gera a build de produção
 npm run start   # Inicia a aplicação em modo produção
 ```
 ## Screenshot
-![Image](https://github.com/user-attachments/assets/4460b6d5-9f4b-4a24-bbe4-a779997df189)
+![Captura de tela da aplicação](https://github.com/user-attachments/assets/4460b6d5-9f4b-4a24-bbe4-a779997df189)
 
 <div align="center">Desenvolvido com 💙 por @kennedfer</div>
